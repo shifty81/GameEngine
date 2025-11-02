@@ -274,9 +274,13 @@ int main() {
     });
     
     // Load startup scripts if they exist
-    if (std::ifstream("scripts/startup.script").good()) {
+    std::ifstream startupCheck("scripts/startup.script");
+    if (startupCheck.good()) {
+        startupCheck.close();
         std::cout << "[ScriptCompiler] Loading startup script..." << std::endl;
-        scriptManager.LoadScript("scripts/startup.script");
+        if (!scriptManager.LoadScript("scripts/startup.script")) {
+            std::cerr << "[ScriptCompiler] Warning: Failed to load startup script" << std::endl;
+        }
     }
     
     // Initialize Debug Console

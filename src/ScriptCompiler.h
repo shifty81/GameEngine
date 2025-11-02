@@ -235,19 +235,30 @@ private:
             // Handle quoted strings
             if (token[0] == '"') {
                 std::string quotedString = token.substr(1);
-                if (token.back() != '"') {
+                // Check if quote is closed in the same token
+                if (token.length() > 1 && token.back() == '"') {
+                    quotedString = quotedString.substr(0, quotedString.length() - 1);
+                    tokens.push_back(quotedString);
+                } else {
+                    // Multi-word quoted string
                     std::string part;
+                    bool foundClosing = false;
                     while (ss >> part) {
                         quotedString += " " + part;
                         if (part.back() == '"') {
                             quotedString = quotedString.substr(0, quotedString.length() - 1);
+                            foundClosing = true;
                             break;
                         }
                     }
-                } else {
-                    quotedString = quotedString.substr(0, quotedString.length() - 1);
+                    if (!foundClosing) {
+                        // Unclosed quote - log warning and use what we have
+                        if (verbose_) {
+                            std::cerr << "[ScriptCompiler Warning] Unclosed quote in string" << std::endl;
+                        }
+                    }
+                    tokens.push_back(quotedString);
                 }
-                tokens.push_back(quotedString);
             } else {
                 tokens.push_back(token);
             }
@@ -278,7 +289,19 @@ private:
             for (auto& arg : args) {
                 if (arg.length() > 1 && arg[0] == '$') {
                     std::string varName = arg.substr(1);
-                    arg = GetVariable(varName);
+                    if (HasVariable(varName)) {
+                        arg = GetVariable(varName);
+                    } else {
+                        if (verbose_) {
+                            std::cerr << "[ScriptCompiler Warning] Variable not found: " << varName << std::endl;
+                        }
+                        // Keep the original token as-is to indicate missing variable
+                    }
+                } else if (arg == "$") {
+                    // Single '$' is kept as-is (edge case)
+                    if (verbose_) {
+                        std::cerr << "[ScriptCompiler Warning] Bare '$' found, treating as literal" << std::endl;
+                    }
                 }
             }
             

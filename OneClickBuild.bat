@@ -204,7 +204,9 @@ if not exist "build" mkdir build
 cd build
 
 REM Run CMake to generate Visual Studio project files
-cmake -DCMAKE_BUILD_TYPE=Release ..
+REM Note: For Visual Studio generators, CMAKE_BUILD_TYPE is not needed at configure time
+REM The configuration (Debug/Release) is selected at build time
+cmake ..
 if %errorLevel% neq 0 (
     echo.
     echo ========================================================================
