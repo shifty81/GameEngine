@@ -631,6 +631,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 - **[README.md](README.md)** - This file - Overview and build instructions
 - **[DOWNLOAD_BINARIES.md](DOWNLOAD_BINARIES.md)** - 📦 Download pre-built executables (no compilation needed!)
 - **[VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)** - 📖 Detailed Visual Studio installation guide with specific versions and visual instructions
+- **[VS2022_COMPATIBILITY.md](VS2022_COMPATIBILITY.md)** - ✅ Visual Studio 2022 compatibility notes (including v17.14.x)
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
 - **[DEBUG_CONSOLE_GUIDE.md](DEBUG_CONSOLE_GUIDE.md)** - Debug console usage and command reference
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive cross-platform troubleshooting guide
