@@ -46,6 +46,12 @@ This engine now includes **all essential game engine systems** for production-re
 - 🧠 **Memory Tracker** - GPU memory usage tracking
 - 🔍 **OpenGL Debugger** - Automatic OpenGL error detection and logging
 - ⏱️ **High-Precision Timers** - Performance measurement tools
+- 🎮 **Debug Console** - Runtime command console with enable/disable toggle (press ` key)
+  - Command history with up/down arrow navigation
+  - Variable get/set system
+  - Extensible command registration
+  - Built-in commands (help, clear, set, get, echo)
+  - Game control commands (wireframe, cellshading, camera control)
 
 ### 🎯 Asset Integration
 - 🎨 **itch.io Asset Support** - Easy integration of downloaded assets from itch.io marketplace
@@ -60,33 +66,39 @@ This engine now includes **all essential game engine systems** for production-re
 
 ### Technical Capabilities
 - Modern OpenGL 3.3+ rendering pipeline
+- C++20 standard with modern features
 - PBR (Physically Based Rendering) materials
 - HDR rendering with tone mapping
 - Multi-light support (unlimited lights)
 - Real-time shader compilation
 - Cross-platform support (Windows, Linux, macOS)
-- Assetimport for 10+ 3D formats
+- Assimp 6.0.2 for 10+ 3D formats
+- GLFW 3.4 for window management
+- GLM 0.9.9.8 for mathematics
 - Event-driven architecture
 - Component-based entity system
+- Runtime debug console system
 
 ## Building the Engine
 
 ### Prerequisites
 
 #### Windows
-- CMake 3.15 or higher
-- Visual Studio 2019 or newer (with C++ desktop development)
+- CMake 3.20 or higher
+- Visual Studio 2019 or newer (with C++ desktop development for C++20 support)
 - Git
 
 #### Linux
 ```bash
 sudo apt-get install cmake build-essential libgl1-mesa-dev libglu1-mesa-dev
 ```
+Note: Requires GCC 10+ or Clang 11+ for C++20 support
 
 #### macOS
 ```bash
 brew install cmake
 ```
+Note: Requires Xcode 12+ for C++20 support
 
 ### Build Instructions
 
@@ -355,7 +367,23 @@ make -j4
 - **Mouse** - Look around
 - **F** - Toggle wireframe mode
 - **C** - Toggle cell shading on/off
+- **` (Grave/Tilde)** - Toggle debug console
 - **ESC** - Exit application
+
+### Debug Console Commands
+When the debug console is open (press ` key):
+- **help** - List all available commands
+- **clear** - Clear console output
+- **wireframe** - Toggle wireframe rendering
+- **cellshading [on|off]** - Toggle or set cell shading
+- **setcam <x> <y> <z>** - Set camera position
+- **getcam** - Display current camera position
+- **set <name> <value>** - Set a console variable
+- **get <name>** - Get a console variable value
+- **listvars** - List all console variables
+- **echo <text>** - Print text to console
+- **exit/quit** - Close console
+- **Up/Down Arrow** - Navigate command history
 
 ## Procedural Generation
 
@@ -421,19 +449,21 @@ GameEngine/
 │   ├── AudioSystem.h             # ✨ NEW - 3D audio framework
 │   ├── UISystem.h                # ✨ NEW - In-game UI system
 │   ├── SceneGraph.h              # ✨ NEW - Scene/Entity management
-│   └── DebugTools.h              # ✨ NEW - Profiling and debug rendering
+│   ├── DebugTools.h              # ✨ NEW - Profiling and debug rendering
+│   └── DebugConsole.h            # ✨ NEW - Runtime debug console system
 ├── assets/
 │   ├── models/                   # 3D model files (.obj, .fbx, .gltf)
 │   └── textures/                 # Texture files (.png, .jpg, .tga)
 ├── external/
-│   ├── glfw/                     # Window and input handling
-│   ├── glm/                      # Mathematics library
-│   ├── glad/                     # OpenGL loader
-│   ├── assimp/                   # 3D model loading library
+│   ├── glfw/                     # Window and input handling (v3.4)
+│   ├── glm/                      # Mathematics library (v0.9.9.8)
+│   ├── glad/                     # OpenGL loader (3.3 Core)
+│   ├── assimp/                   # 3D model loading library (v6.0.2)
 │   └── stb/                      # Image loading library
 ├── CMakeLists.txt                # Build configuration
 ├── README.md                     # This file
 ├── ENGINE_SYSTEMS.md             # ✨ NEW - Complete systems documentation
+├── VERSION_UPDATES.md            # ✨ NEW - Architecture updates and modernization
 ├── ASSET_PIPELINE.md             # Asset integration guide
 ├── ITCHIO_ASSETS.md              # ✨ NEW - itch.io asset integration guide
 └── QUICKSTART.md                 # Quick start guide
@@ -452,6 +482,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
+- **[VERSION_UPDATES.md](VERSION_UPDATES.md)** - Architecture modernization and dependency updates
 - **[ITCHIO_ASSETS.md](ITCHIO_ASSETS.md)** - Easy itch.io asset integration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners
 - **[ASSET_PIPELINE.md](ASSET_PIPELINE.md)** - 3D asset integration guide
