@@ -292,9 +292,26 @@ run.bat
 - **Note**: This error means CMake found Visual Studio but the actual C++ compiler tools aren't installed. The "Desktop development with C++" workload includes cl.exe (C++ compiler), MSBuild, and Windows SDK.
 
 **Problem**: "CMake is not recognized as an internal or external command"
-- **Solution**: CMake is not in your system PATH. Reinstall CMake and select "Add to PATH" option, or add manually:
-  - Default location: `C:\Program Files\CMake\bin`
-  - Add to System Environment Variables → Path
+- **Cause**: CMake is not in your system PATH, or is installed in a custom location
+- **Solution Option 1 - Reinstall CMake with PATH**:
+  1. Reinstall CMake from https://cmake.org/download/
+  2. During installation, select **"Add CMake to the system PATH for all users"** or **"Add CMake to the system PATH for the current user"**
+  3. Restart Command Prompt and try again
+- **Solution Option 2 - Manually Add CMake to PATH** (for custom installations like `C:\make\`):
+  1. Press **Windows + R**, type `sysdm.cpl`, press Enter
+  2. Click **"Environment Variables"** button (bottom right)
+  3. Under **"System variables"** (or "User variables"), find and select **"Path"**
+  4. Click **"Edit"**
+  5. Click **"New"** and add your CMake bin directory:
+     - If CMake is at `C:\make\`, add: `C:\make\bin`
+     - If CMake is at `C:\Program Files\CMake\`, add: `C:\Program Files\CMake\bin`
+     - Make sure to add the `bin` subdirectory where `cmake.exe` is located
+  6. Click **"OK"** on all dialogs
+  7. **Restart your Command Prompt or PowerShell** (environment changes require a new session)
+  8. Verify: Run `cmake --version` - you should see your CMake version (e.g., 4.2.0 or 3.20+)
+- **Solution Option 3 - Use Full Path**:
+  - Instead of running `cmake ..`, use the full path: `C:\make\bin\cmake.exe ..`
+- **Note**: The PATH variable tells Windows where to find executable files. Without it, you must use the full path to cmake.exe every time
 
 **Problem**: "Could not find Visual Studio"
 - **Solution**: Install Visual Studio with "Desktop development with C++" workload, or specify generator with `-G` flag
