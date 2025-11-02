@@ -99,6 +99,17 @@ if ! command -v cmake &> /dev/null; then
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             if ! command -v brew &> /dev/null; then
                 echo "Homebrew not found. Installing Homebrew first..."
+                echo ""
+                echo "NOTE: This will download and execute the official Homebrew installer from:"
+                echo "  https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+                echo ""
+                read -p "Continue? (y/n) " -n 1 -r
+                echo ""
+                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                    echo "Installation cancelled. Please install Homebrew manually:"
+                    echo "  Visit: https://brew.sh"
+                    exit 1
+                fi
                 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             fi
             brew install cmake

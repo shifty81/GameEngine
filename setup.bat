@@ -106,7 +106,11 @@ if %ERRORLEVEL% NEQ 0 (
     echo This may take a few minutes...
     echo.
     
-    powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-windows-x86_64.zip' -OutFile 'tools\cmake.zip' -UseBasicParsing}"
+    REM CMake 3.28.1 SHA256: 2c255d7c748ecbf14649f1e45f8a6c08b39a7fc19e046bcfc3a3bac5d12bba14
+    set CMAKE_URL=https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-windows-x86_64.zip
+    set CMAKE_SHA256=2c255d7c748ecbf14649f1e45f8a6c08b39a7fc19e046bcfc3a3bac5d12bba14
+    
+    powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%CMAKE_URL%' -OutFile 'tools\cmake.zip' -UseBasicParsing}"
     
     if %ERRORLEVEL% NEQ 0 (
         echo ERROR: Failed to download CMake
@@ -115,6 +119,16 @@ if %ERRORLEVEL% NEQ 0 (
         echo Choose "Windows x64 ZIP" for portable installation
         echo Extract to: %CD%\tools\cmake\
         echo.
+        pause
+        exit /b 1
+    )
+    
+    echo Verifying download integrity...
+    powershell -Command "& {$hash = (Get-FileHash 'tools\cmake.zip' -Algorithm SHA256).Hash; if ($hash -ne '%CMAKE_SHA256%') { Write-Host 'ERROR: Checksum verification failed!' -ForegroundColor Red; exit 1 } else { Write-Host 'Checksum verified successfully' -ForegroundColor Green }}"
+    
+    if %ERRORLEVEL% NEQ 0 (
+        echo ERROR: CMake download corrupted or tampered
+        del "tools\cmake.zip"
         pause
         exit /b 1
     )

@@ -149,26 +149,53 @@ if [ "$OS" = "linux" ]; then
     # Check for OpenGL development libraries
     print_header "Step 3: Checking for Required Development Libraries"
     
-    if ldconfig -p | grep -q libGL.so; then
-        print_success "OpenGL development libraries found"
+    # Try ldconfig first, fall back to pkg-config if not available
+    if command -v ldconfig &> /dev/null; then
+        if ldconfig -p 2>/dev/null | grep -q libGL.so; then
+            print_success "OpenGL development libraries found"
+        else
+            print_warning "OpenGL development libraries not found"
+            MISSING_PACKAGES+=("libgl1-mesa-dev")
+        fi
+        
+        if ldconfig -p 2>/dev/null | grep -q libGLU.so; then
+            print_success "GLU development libraries found"
+        else
+            print_warning "GLU development libraries not found"
+            MISSING_PACKAGES+=("libglu1-mesa-dev")
+        fi
+        
+        if ldconfig -p 2>/dev/null | grep -q libX11.so; then
+            print_success "X11 development libraries found"
+        else
+            print_warning "X11 development libraries not found"
+            MISSING_PACKAGES+=("libx11-dev" "libxrandr-dev" "libxinerama-dev" "libxcursor-dev" "libxi-dev")
+        fi
+    elif command -v pkg-config &> /dev/null; then
+        # Fallback to pkg-config for systems without ldconfig
+        if pkg-config --exists gl 2>/dev/null; then
+            print_success "OpenGL development libraries found (via pkg-config)"
+        else
+            print_warning "OpenGL development libraries not found"
+            MISSING_PACKAGES+=("libgl1-mesa-dev")
+        fi
+        
+        if pkg-config --exists glu 2>/dev/null; then
+            print_success "GLU development libraries found (via pkg-config)"
+        else
+            print_warning "GLU development libraries not found"
+            MISSING_PACKAGES+=("libglu1-mesa-dev")
+        fi
+        
+        if pkg-config --exists x11 2>/dev/null; then
+            print_success "X11 development libraries found (via pkg-config)"
+        else
+            print_warning "X11 development libraries not found"
+            MISSING_PACKAGES+=("libx11-dev" "libxrandr-dev" "libxinerama-dev" "libxcursor-dev" "libxi-dev")
+        fi
     else
-        print_warning "OpenGL development libraries not found"
-        MISSING_PACKAGES+=("libgl1-mesa-dev")
-    fi
-    
-    if ldconfig -p | grep -q libGLU.so; then
-        print_success "GLU development libraries found"
-    else
-        print_warning "GLU development libraries not found"
-        MISSING_PACKAGES+=("libglu1-mesa-dev")
-    fi
-    
-    # Check for X11 development libraries (required for GLFW)
-    if ldconfig -p | grep -q libX11.so; then
-        print_success "X11 development libraries found"
-    else
-        print_warning "X11 development libraries not found"
-        MISSING_PACKAGES+=("libx11-dev" "libxrandr-dev" "libxinerama-dev" "libxcursor-dev" "libxi-dev")
+        print_warning "Cannot verify libraries (ldconfig and pkg-config not available)"
+        print_info "Libraries will be checked during CMake configuration"
     fi
     
     # Summary
@@ -230,6 +257,17 @@ if [ "$OS" = "linux" ]; then
                 echo ""
                 echo -e "${CYAN}AutoFix Mode: Installing packages...${RESET}"
                 echo ""
+                echo -e "${YELLOW}The following command will be executed:${RESET}"
+                echo "  sudo apt-get update"
+                echo "  sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
+                echo ""
+                read -p "Continue with installation? (y/n) " -n 1 -r
+                echo ""
+                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                    print_info "Installation cancelled"
+                    exit 1
+                fi
+                
                 sudo apt-get update
                 sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
                 
@@ -254,7 +292,17 @@ if [ "$OS" = "linux" ]; then
                 echo ""
                 echo -e "${CYAN}AutoFix Mode: Installing packages...${RESET}"
                 echo ""
-                eval "$INSTALL_CMD gcc-c++ cmake mesa-libGL-devel mesa-libGLU-devel libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
+                echo -e "${YELLOW}The following command will be executed:${RESET}"
+                echo "  $INSTALL_CMD gcc-c++ cmake mesa-libGL-devel mesa-libGLU-devel libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
+                echo ""
+                read -p "Continue with installation? (y/n) " -n 1 -r
+                echo ""
+                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                    print_info "Installation cancelled"
+                    exit 1
+                fi
+                
+                $INSTALL_CMD gcc-c++ cmake mesa-libGL-devel mesa-libGLU-devel libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel
                 
                 if [ $? -eq 0 ]; then
                     echo ""
@@ -344,11 +392,22 @@ elif [ "$OS" = "macos" ]; then
             echo ""
             echo -e "${CYAN}AutoFix Mode: Launching Xcode Command Line Tools installer...${RESET}"
             echo ""
-            xcode-select --install
+            xcode-select --install 2>&1
             
-            echo ""
-            print_info "Please complete the installation in the dialog that appeared."
-            print_info "After installation is complete, run this script again to verify."
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -eq 0 ]; then
+                echo ""
+                print_info "Please complete the installation in the dialog that appeared."
+                print_info "After installation is complete, run this script again to verify."
+            elif [ $EXIT_CODE -eq 1 ]; then
+                # Exit code 1 usually means already installed
+                print_warning "Command Line Tools may already be installed but corrupted"
+                print_info "Try reinstalling with these steps:"
+                print_info "  1. sudo rm -rf /Library/Developer/CommandLineTools"
+                print_info "  2. xcode-select --install"
+            else
+                print_error "Failed to launch installer (exit code: $EXIT_CODE)"
+            fi
             exit 1
         fi
         
