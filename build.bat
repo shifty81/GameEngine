@@ -57,7 +57,7 @@ if %ERRORLEVEL% NEQ 0 (
     echo    - Run build.bat again
     echo.
     echo For detailed troubleshooting, see README.md section:
-    echo "Building the Engine" -^> "Troubleshooting"
+    echo "Building the Engine" ^-^> "Troubleshooting"
     echo.
     echo ======================================================================
     echo.
