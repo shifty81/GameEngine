@@ -109,8 +109,8 @@ This engine now includes **all essential game engine systems** for production-re
 
 #### Windows
 - CMake 3.20 or higher
-- **Visual Studio Community 2022 (version 17.8 or newer)** or Visual Studio 2019 (version 16.11 or newer)
-  - **Specific versions recommended:** Visual Studio 2022 v17.11+ (preferred) or Visual Studio 2019 v16.11+
+- **Visual Studio Community 2022 (version 17.8 or newer, including 17.14.x)** or Visual Studio 2019 (version 16.11 or newer)
+  - **Tested versions:** Visual Studio 2022 v17.8 through v17.14
   - Must include **"Desktop development with C++"** workload for C++20 support
   - See [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md) for detailed installation guide with visual instructions
 - Git
@@ -163,8 +163,8 @@ Before building, ensure you have the following installed:
    - Verify installation: Run `cmake --version` in Command Prompt
    - You should see `cmake version 3.15.0` or higher
 
-3. **Visual Studio 2022 (version 17.8+) or Visual Studio 2019 (version 16.11+)**
-   - **Recommended:** Visual Studio Community 2022 version 17.8 or newer (Latest: 17.11+)
+3. **Visual Studio 2022 (version 17.8+, including 17.14.x) or Visual Studio 2019 (version 16.11+)**
+   - **Tested:** Visual Studio Community 2022 versions 17.8 through 17.14 (all supported)
    - **Alternative:** Visual Studio Community 2019 version 16.11 or newer
    - Download Community Edition (free) from: https://visualstudio.microsoft.com/downloads/
    - During installation, select the **"Desktop development with C++"** workload

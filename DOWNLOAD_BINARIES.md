@@ -240,7 +240,7 @@ See the development setup guides:
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for developers
 
 **Requirements for building from source:**
-- Visual Studio 2022 (v17.8+) or Visual Studio 2019 (v16.11+) on Windows
+- Visual Studio 2022 (v17.8 through v17.14+, all supported) or Visual Studio 2019 (v16.11+) on Windows
 - GCC 10+ or Clang 11+ on Linux
 - CMake 3.20+
 - Git

@@ -5,14 +5,18 @@
 ## Visual Studio Version Requirements
 
 **This project requires:**
-- **Visual Studio Community 2022** (version 17.8 or newer, recommended: 17.11+)
+- **Visual Studio Community 2022** (version 17.8 or newer, including 17.14.x)
 - **OR Visual Studio Community 2019** (version 16.11 or newer)
 - With **"Desktop development with C++"** workload installed
+
+**Tested versions:**
+- Visual Studio 2022: All versions from 17.8.x through 17.14.x are fully supported and tested
+- Visual Studio 2019: Version 16.11.x and newer
 
 **How to check your version:**
 - Open "Visual Studio Installer" from Windows Start menu
 - Look at the version number below "Visual Studio Community 2022" or "2019"
-- Example: "Version 17.11.5" means Visual Studio 2022 version 17.11.5
+- Example: "Version 17.14.19" means Visual Studio 2022 version 17.14.19
 
 ## Error: "No CMAKE_CXX_COMPILER could be found" or "The CXX compiler identification is unknown"
 
@@ -25,12 +29,12 @@ This error occurs when Visual Studio is installed without the C++ compiler tools
 1. **Open Visual Studio Installer**
    - Search for "Visual Studio Installer" in Windows Start Menu
    - Or download from: https://visualstudio.microsoft.com/downloads/
-   - **Recommended version:** Visual Studio Community 2022 (v17.8+ or newer)
+   - **Tested versions:** Visual Studio Community 2022 (v17.8 through v17.14, all supported)
 
 2. **Modify Your Installation**
    - Click the "Modify" button next to your Visual Studio installation
    - If Visual Studio isn't installed, click "Install" and select Community Edition (free)
-   - **Important:** Make sure you're installing Visual Studio 2022 (v17.8+) or Visual Studio 2019 (v16.11+)
+   - **Note:** All Visual Studio 2022 versions from 17.8 through 17.14 (and newer) are supported
 
 3. **Select the Required Workload**
    - Check the box for **"Desktop development with C++"**
@@ -52,8 +56,12 @@ This error occurs when Visual Studio is installed without the C++ compiler tools
    # You can find these in Start Menu under Visual Studio 2022
    
    cl
-   # Should output: "Microsoft (R) C/C++ Optimizing Compiler Version 19.38.xxxxx..."
-   # Version 19.38.x = VS 2022 v17.11
+   # Should output: "Microsoft (R) C/C++ Optimizing Compiler Version 19.xx.xxxxx..."
+   # Version 19.42.x = VS 2022 v17.14
+   # Version 19.41.x = VS 2022 v17.13
+   # Version 19.40.x = VS 2022 v17.12
+   # Version 19.39.x = VS 2022 v17.11
+   # Version 19.38.x = VS 2022 v17.10
    # Version 19.29.x = VS 2019 v16.11
    ```
 

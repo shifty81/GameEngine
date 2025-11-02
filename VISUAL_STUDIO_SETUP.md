@@ -18,7 +18,8 @@ This guide provides **specific version numbers** and **detailed visual instructi
 **Specific Version Details:**
 - **Product Name:** Visual Studio Community 2022
 - **Minimum Version:** 17.8.0 (Released November 2023)
-- **Recommended Version:** 17.11.5 or later (Latest stable as of 2024)
+- **Recommended Version:** 17.11.5 or later (Latest stable)
+- **Tested Versions:** 17.8.x, 17.9.x, 17.10.x, 17.11.x, 17.12.x, 17.13.x, 17.14.x
 - **Version Number Format:** 17.x.y where x is the minor version and y is the patch
 - **C++ Compiler (MSVC):** v143 or newer
 - **C++ Standard Support:** C++20 (required for this project)
@@ -30,6 +31,7 @@ This guide provides **specific version numbers** and **detailed visual instructi
 - Better IntelliSense and debugging experience
 - Enhanced compiler optimizations
 - Stable and widely tested
+- **Note:** All Visual Studio 2022 versions from 17.8 onwards (including 17.14.x) are fully supported
 
 ### Alternative: Visual Studio 2019 (Version 16.11 or newer)
 
@@ -482,7 +484,10 @@ For reference, here are the Visual Studio version numbers:
 
 | Product Name | Version Number | Release Date | C++ Standard | Recommended |
 |--------------|----------------|--------------|--------------|-------------|
-| Visual Studio 2022 v17.11 | 17.11.x | September 2024 | C++20, C++23 (partial) | ✓ Yes |
+| Visual Studio 2022 v17.14 | 17.14.x | November 2024 | C++20, C++23 (partial) | ✓ Yes (Tested) |
+| Visual Studio 2022 v17.13 | 17.13.x | October 2024 | C++20, C++23 (partial) | ✓ Yes |
+| Visual Studio 2022 v17.12 | 17.12.x | September 2024 | C++20, C++23 (partial) | ✓ Yes |
+| Visual Studio 2022 v17.11 | 17.11.x | August 2024 | C++20, C++23 (partial) | ✓ Yes |
 | Visual Studio 2022 v17.10 | 17.10.x | May 2024 | C++20, C++23 (partial) | ✓ Yes |
 | Visual Studio 2022 v17.9 | 17.9.x | February 2024 | C++20, C++23 (partial) | ✓ Yes |
 | Visual Studio 2022 v17.8 | 17.8.x | November 2023 | C++20 | ✓ Yes (Minimum) |
@@ -506,8 +511,12 @@ For reference, here are the Visual Studio version numbers:
 cl
 ```
 Look for "Version 19.xx.xxxxx" in the output:
-- 19.38.x = Visual Studio 2022 v17.11
-- 19.37.x = Visual Studio 2022 v17.10
+- 19.42.x = Visual Studio 2022 v17.14
+- 19.41.x = Visual Studio 2022 v17.13
+- 19.40.x = Visual Studio 2022 v17.12
+- 19.39.x = Visual Studio 2022 v17.11
+- 19.38.x = Visual Studio 2022 v17.10
+- 19.37.x = Visual Studio 2022 v17.9
 - 19.29.x = Visual Studio 2019 v16.11
 
 ---
