@@ -1,5 +1,7 @@
 # 3D Game Engine
 
+[![Build Test](https://github.com/shifty81/GameEngine/actions/workflows/build-test.yml/badge.svg)](https://github.com/shifty81/GameEngine/actions/workflows/build-test.yml)
+
 A professional-grade 3D game engine built with C++ and OpenGL, featuring procedural world generation, advanced rendering systems, and comprehensive game development tools.
 
 ## 🚀 Quick Start Options
@@ -674,6 +676,26 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners
 - **[ASSET_PIPELINE.md](ASSET_PIPELINE.md)** - 3D asset integration guide
 - **[FEATURES.md](FEATURES.md)** - Detailed feature list
+
+## 🔧 Continuous Integration
+
+This repository uses GitHub Actions for automated testing and binary builds:
+
+### Build Testing
+Every push and pull request automatically triggers the **Build Test** workflow:
+- ✅ **Windows Build Test** - Validates compilation with Visual Studio 2022
+- ✅ **Linux Build Test** - Validates compilation with GCC on Ubuntu
+- ✅ **Build Artifacts** - Uploads test binaries for verification (7-day retention)
+- 🔗 **View Build Status**: Check the badge at the top of this README
+
+### Release Builds
+Tagged releases (e.g., `v1.0.0`) automatically trigger the **Build and Release** workflow:
+- 📦 Creates production-ready binaries for Windows and Linux
+- 🚀 Publishes binaries to GitHub Releases
+- ✨ Includes all assets and documentation
+- 🔗 **See**: [DOWNLOAD_BINARIES.md](DOWNLOAD_BINARIES.md) for download instructions
+
+**Note**: Build test artifacts are available in the Actions tab for 7 days after each build.
 
 ## Extending the Engine
 
