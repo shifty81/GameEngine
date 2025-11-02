@@ -45,9 +45,25 @@ void processInput(GLFWwindow *window);
 void character_callback(GLFWwindow* window, unsigned int codepoint);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+void glfw_error_callback(int error, const char* description) {
+    std::cerr << "GLFW Error " << error << ": " << description << std::endl;
+}
+
 int main() {
+    // Set GLFW error callback before initialization
+    glfwSetErrorCallback(glfw_error_callback);
+    
     // Initialize GLFW
-    glfwInit();
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        std::cerr << "\nTroubleshooting:" << std::endl;
+        std::cerr << "1. Ensure you have a display available (check $DISPLAY environment variable)" << std::endl;
+        std::cerr << "2. Install required X11 libraries: sudo apt-get install libx11-dev libxrandr-dev" << std::endl;
+        std::cerr << "3. If running headless, use Xvfb: Xvfb :99 -screen 0 1024x768x24 &" << std::endl;
+        std::cerr << "   Then export DISPLAY=:99 before running" << std::endl;
+        return -1;
+    }
+    
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -55,7 +71,16 @@ int main() {
     // Create window
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "3D Game Engine - Procedural World", NULL, NULL);
     if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        std::cerr << "\nPossible causes:" << std::endl;
+        std::cerr << "1. OpenGL 3.3 not supported by your GPU/driver" << std::endl;
+        std::cerr << "2. No display server running (X11/Wayland)" << std::endl;
+        std::cerr << "3. Insufficient graphics driver installation" << std::endl;
+        std::cerr << "\nTroubleshooting steps:" << std::endl;
+        std::cerr << "1. Check OpenGL support: glxinfo | grep \"OpenGL version\"" << std::endl;
+        std::cerr << "2. Update GPU drivers: sudo ubuntu-drivers autoinstall (for NVIDIA)" << std::endl;
+        std::cerr << "3. For headless systems, use Xvfb (virtual framebuffer)" << std::endl;
+        std::cerr << "4. See UBUNTU_24_04.md for detailed setup instructions" << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -71,7 +96,10 @@ int main() {
 
     // Load OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        std::cerr << "Failed to initialize GLAD" << std::endl;
+        std::cerr << "This indicates OpenGL function loading failed." << std::endl;
+        std::cerr << "Ensure your GPU drivers are properly installed." << std::endl;
+        glfwTerminate();
         return -1;
     }
 

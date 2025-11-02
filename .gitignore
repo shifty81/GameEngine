@@ -36,6 +36,9 @@ cmake_install.cmake
 *.o
 *.obj
 
+# Generated textures
+textures/
+
 # Asset files (uncomment if you don't want to commit large assets)
 # assets/**/*.fbx
 # assets/**/*.obj
