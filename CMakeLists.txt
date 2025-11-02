@@ -58,7 +58,9 @@ set_source_files_properties(external/glad/src/glad.c PROPERTIES LANGUAGE CXX)
 # GLM for mathematics
 # Fix for CMake 3.27+ which no longer supports compatibility with CMake < 3.5
 # GLM submodule requires CMake 3.2, so we tell CMake to allow it by setting the minimum policy version
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "Minimum CMake policy version" FORCE)
+if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+    set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+endif()
 add_subdirectory(external/glm)
 
 # Assimp for 3D model loading
