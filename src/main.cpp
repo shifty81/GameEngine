@@ -12,6 +12,7 @@
 #include "Water.h"
 #include "Wind.h"
 #include "TextureGenerator.h"
+#include "DebugConsole.h"
 
 // Settings
 const unsigned int SCR_WIDTH = 1280;
@@ -31,10 +32,16 @@ float lastFrame = 0.0f;
 bool wireframeMode = false;
 bool cellShadingEnabled = true;
 
+// Debug console state
+bool consoleActive = false;
+std::string consoleInput = "";
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
+void character_callback(GLFWwindow* window, unsigned int codepoint);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main() {
     // Initialize GLFW
@@ -54,6 +61,8 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetCharCallback(window, character_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     // Capture mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -218,6 +227,56 @@ int main() {
     unsigned int grassTexture = TextureGenerator::generateGrassTexture();
     unsigned int waterTexture = TextureGenerator::generateWaterTexture();
 
+    // Initialize Debug Console
+    auto debugConsole = DebugConsole::GetInstance();
+    
+    // Register custom game-specific console commands
+    debugConsole->RegisterCommand("wireframe", "Toggle wireframe mode",
+        [](const std::vector<std::string>& args) {
+            wireframeMode = !wireframeMode;
+            glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
+            DebugConsole::GetInstance()->Log("[Console] Wireframe mode: " + 
+                std::string(wireframeMode ? "ON" : "OFF"));
+        });
+    
+    debugConsole->RegisterCommand("cellshading", "Toggle or set cell shading (usage: cellshading [on|off])",
+        [](const std::vector<std::string>& args) {
+            if (args.empty()) {
+                cellShadingEnabled = !cellShadingEnabled;
+            } else {
+                cellShadingEnabled = (args[0] == "on" || args[0] == "1" || args[0] == "true");
+            }
+            DebugConsole::GetInstance()->Log("[Console] Cell shading: " + 
+                std::string(cellShadingEnabled ? "ON" : "OFF"));
+        });
+    
+    debugConsole->RegisterCommand("setcam", "Set camera position (usage: setcam <x> <y> <z>)",
+        [](const std::vector<std::string>& args) {
+            if (args.size() >= 3) {
+                try {
+                    float x = std::stof(args[0]);
+                    float y = std::stof(args[1]);
+                    float z = std::stof(args[2]);
+                    camera.Position = glm::vec3(x, y, z);
+                    DebugConsole::GetInstance()->Log("[Console] Camera moved to (" + 
+                        args[0] + ", " + args[1] + ", " + args[2] + ")");
+                } catch (const std::exception& e) {
+                    DebugConsole::GetInstance()->Log("[Error] Invalid number format. Usage: setcam <x> <y> <z>");
+                }
+            } else {
+                DebugConsole::GetInstance()->Log("[Error] Usage: setcam <x> <y> <z>");
+            }
+        });
+    
+    debugConsole->RegisterCommand("getcam", "Get current camera position",
+        [](const std::vector<std::string>& args) {
+            auto console = DebugConsole::GetInstance();
+            console->Log("[Console] Camera position: (" + 
+                std::to_string(camera.Position.x) + ", " +
+                std::to_string(camera.Position.y) + ", " +
+                std::to_string(camera.Position.z) + ")");
+        });
+
     std::cout << "\n=== 3D Game Engine Started ===" << std::endl;
     std::cout << "Controls:" << std::endl;
     std::cout << "  WASD - Move camera" << std::endl;
@@ -225,6 +284,7 @@ int main() {
     std::cout << "  Mouse - Look around" << std::endl;
     std::cout << "  F - Toggle wireframe mode" << std::endl;
     std::cout << "  C - Toggle cell shading" << std::endl;
+    std::cout << "  ` (Grave/Tilde) - Toggle debug console" << std::endl;
     std::cout << "  ESC - Exit" << std::endl;
     std::cout << "\nFeatures:" << std::endl;
     std::cout << "  ✓ Procedural terrain generation" << std::endl;
@@ -233,6 +293,7 @@ int main() {
     std::cout << "  ✓ Flowing water system" << std::endl;
     std::cout << "  ✓ Wind system (for windmills)" << std::endl;
     std::cout << "  ✓ Procedural texture generation" << std::endl;
+    std::cout << "  ✓ Debug console (press ` to open)" << std::endl;
     std::cout << "==============================\n" << std::endl;
 
     // Render loop
@@ -281,6 +342,25 @@ int main() {
         
         water.Draw(waterShader);
 
+        // Display console output if active
+        if (consoleActive) {
+            auto console = DebugConsole::GetInstance();
+            const auto& log = console->GetOutputLog();
+            
+            // Print console header
+            std::cout << "\n========== Debug Console ==========\n";
+            
+            // Print recent log entries (last 10)
+            size_t startIdx = log.size() > 10 ? log.size() - 10 : 0;
+            for (size_t i = startIdx; i < log.size(); i++) {
+                std::cout << log[i] << std::endl;
+            }
+            
+            // Print current input
+            std::cout << "\n> " << consoleInput << "_\n";
+            std::cout << "===================================\n" << std::endl;
+        }
+
         // Display wind info (for debugging)
         if ((int)currentFrame % 5 == 0) {
             glm::vec3 windForce = wind.getForce();
@@ -300,6 +380,11 @@ int main() {
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    // Don't process camera/game input when console is active
+    if (consoleActive) {
+        return;
+    }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -342,6 +427,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    // Don't process mouse movement when console is active
+    if (consoleActive) {
+        return;
+    }
+    
     if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
@@ -359,4 +449,65 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(yoffset);
+}
+
+void character_callback(GLFWwindow* window, unsigned int codepoint) {
+    if (consoleActive) {
+        // Add character to console input
+        if (codepoint >= 32 && codepoint <= 126) {  // Printable ASCII
+            consoleInput += static_cast<char>(codepoint);
+        }
+    }
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        // Toggle console with grave accent/tilde key
+        if (key == GLFW_KEY_GRAVE_ACCENT) {
+            consoleActive = !consoleActive;
+            auto console = DebugConsole::GetInstance();
+            
+            if (consoleActive) {
+                console->SetEnabled(true);
+                console->Log("\n=== Debug Console ===");
+                console->Log("Type 'help' for available commands");
+                console->Log("Press ` again to close console\n");
+                // Release mouse cursor when console is active
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            } else {
+                console->SetEnabled(false);
+                consoleInput.clear();
+                // Capture mouse cursor when console is closed
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                firstMouse = true;  // Reset mouse to prevent camera jump
+            }
+        }
+        
+        if (consoleActive) {
+            auto console = DebugConsole::GetInstance();
+            
+            // Handle Enter key - execute command
+            if (key == GLFW_KEY_ENTER) {
+                if (!consoleInput.empty()) {
+                    console->Log("> " + consoleInput);
+                    console->ExecuteCommand(consoleInput);
+                    consoleInput.clear();
+                }
+            }
+            // Handle Backspace
+            else if (key == GLFW_KEY_BACKSPACE) {
+                if (!consoleInput.empty()) {
+                    consoleInput.pop_back();
+                }
+            }
+            // Handle Up arrow - previous command
+            else if (key == GLFW_KEY_UP) {
+                consoleInput = console->GetPreviousCommand();
+            }
+            // Handle Down arrow - next command
+            else if (key == GLFW_KEY_DOWN) {
+                consoleInput = console->GetNextCommand();
+            }
+        }
+    }
 }
