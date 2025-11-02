@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-windows:
-    name: Build Windows Release
+    name: Build Windows Release (MSVC)
     runs-on: windows-latest
     
     steps:
@@ -95,13 +95,119 @@ jobs:
       
       - name: Create ZIP archive
         run: |
-          Compress-Archive -Path GameEngine-Windows\* -DestinationPath GameEngine-Windows-x64.zip
+          Compress-Archive -Path GameEngine-Windows\* -DestinationPath GameEngine-Windows-x64-MSVC.zip
       
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GameEngine-Windows-x64
-          path: GameEngine-Windows-x64.zip
+          name: GameEngine-Windows-x64-MSVC
+          path: GameEngine-Windows-x64-MSVC.zip
+          retention-days: 90
+  
+  build-windows-mingw:
+    name: Build Windows Release (MinGW)
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.20.x'
+      
+      - name: Setup MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+          version: 13.2.0
+      
+      - name: Configure CMake with MinGW
+        run: |
+          mkdir build-mingw
+          cd build-mingw
+          cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+      
+      - name: Build Release
+        run: |
+          cd build-mingw
+          cmake --build . --config Release -j 4
+      
+      - name: Package Release
+        run: |
+          mkdir GameEngine-Windows-MinGW
+          
+          # Copy executable
+          copy build-mingw\bin\GameEngine.exe GameEngine-Windows-MinGW\
+          
+          # Copy MinGW runtime DLLs (required for distribution)
+          $mingwPath = (Get-Command g++).Source | Split-Path
+          copy "$mingwPath\libgcc_s_seh-1.dll" GameEngine-Windows-MinGW\ -ErrorAction SilentlyContinue
+          copy "$mingwPath\libstdc++-6.dll" GameEngine-Windows-MinGW\ -ErrorAction SilentlyContinue
+          copy "$mingwPath\libwinpthread-1.dll" GameEngine-Windows-MinGW\ -ErrorAction SilentlyContinue
+          
+          # Copy assets
+          xcopy /E /I /Y assets GameEngine-Windows-MinGW\assets
+          
+          # Copy documentation
+          copy README.md GameEngine-Windows-MinGW\
+          copy QUICKSTART.md GameEngine-Windows-MinGW\
+          copy BUILD_WITHOUT_VS.md GameEngine-Windows-MinGW\
+          copy LICENSE GameEngine-Windows-MinGW\
+          
+          # Create a simple run script
+          echo @echo off > GameEngine-Windows-MinGW\run.bat
+          echo echo ================================ >> GameEngine-Windows-MinGW\run.bat
+          echo echo 3D Game Engine (MinGW Build) >> GameEngine-Windows-MinGW\run.bat
+          echo echo ================================ >> GameEngine-Windows-MinGW\run.bat
+          echo echo. >> GameEngine-Windows-MinGW\run.bat
+          echo GameEngine.exe >> GameEngine-Windows-MinGW\run.bat
+          
+          # Create README for binary distribution
+          echo # GameEngine - Pre-built Release (MinGW Build) > GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo This is a pre-built binary release of the 3D Game Engine. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo Built with MinGW-w64 (GCC compiler) - No Visual Studio runtime required! >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo ## Quick Start >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo 1. Double-click run.bat >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo 2. Or run GameEngine.exe directly >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo ## System Requirements >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - Windows 10/11 (64-bit) >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - OpenGL 3.3+ compatible graphics card >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - NO additional runtime required (MinGW DLLs included) >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo ## Controls >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - WASD - Move camera >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - Mouse - Look around >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - Space - Fly up >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - Left Shift - Fly down >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - F - Toggle wireframe >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - C - Toggle cell shading >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - ` (Grave) - Toggle debug console >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo - ESC - Exit >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo For source code and development documentation, visit: >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo https://github.com/shifty81/GameEngine >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo ## About this Build >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo This version was built with MinGW-w64 (GCC 13.2.0) instead of Visual Studio. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo It includes the necessary MinGW runtime DLLs for distribution. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+          echo Performance is comparable to the Visual Studio build. >> GameEngine-Windows-MinGW\README_BINARIES.txt
+      
+      - name: Create ZIP archive
+        run: |
+          Compress-Archive -Path GameEngine-Windows-MinGW\* -DestinationPath GameEngine-Windows-x64-MinGW.zip
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameEngine-Windows-x64-MinGW
+          path: GameEngine-Windows-x64-MinGW.zip
           retention-days: 90
   
   build-linux:
@@ -202,15 +308,20 @@ jobs:
   
   create-release:
     name: Create GitHub Release
-    needs: [build-windows, build-linux]
+    needs: [build-windows, build-windows-mingw, build-linux]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     
     steps:
-      - name: Download Windows artifact
+      - name: Download Windows MSVC artifact
         uses: actions/download-artifact@v4
         with:
-          name: GameEngine-Windows-x64
+          name: GameEngine-Windows-x64-MSVC
+      
+      - name: Download Windows MinGW artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: GameEngine-Windows-x64-MinGW
       
       - name: Download Linux artifact
         uses: actions/download-artifact@v4
@@ -221,7 +332,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            GameEngine-Windows-x64.zip
+            GameEngine-Windows-x64-MSVC.zip
+            GameEngine-Windows-x64-MinGW.zip
             GameEngine-Linux-x64.tar.gz
           body: |
             ## 3D Game Engine - Pre-built Binaries
@@ -229,14 +341,24 @@ jobs:
             Download and run the engine without needing to compile from source!
             
             ### Downloads
-            - **Windows**: `GameEngine-Windows-x64.zip`
-            - **Linux**: `GameEngine-Linux-x64.tar.gz`
             
-            ### Windows Quick Start
-            1. Download `GameEngine-Windows-x64.zip`
+            **Windows Users - Choose One:**
+            - **GameEngine-Windows-x64-MSVC.zip** - Built with Visual Studio (requires VC++ Redistributable)
+            - **GameEngine-Windows-x64-MinGW.zip** - Built with MinGW (no additional runtime needed) ⭐ Recommended
+            
+            **Linux:**
+            - **GameEngine-Linux-x64.tar.gz** - Built with GCC
+            
+            ### Windows Quick Start (MSVC Build)
+            1. Download `GameEngine-Windows-x64-MSVC.zip`
             2. Extract the ZIP file
             3. Install [Visual C++ Redistributable 2022](https://aka.ms/vs/17/release/vc_redist.x64.exe) if not already installed
             4. Run `GameEngine.exe` or `run.bat`
+            
+            ### Windows Quick Start (MinGW Build) ⭐ Recommended
+            1. Download `GameEngine-Windows-x64-MinGW.zip`
+            2. Extract the ZIP file
+            3. Run `GameEngine.exe` or `run.bat` - No additional runtime needed!
             
             ### Linux Quick Start
             1. Download `GameEngine-Linux-x64.tar.gz`

@@ -20,7 +20,7 @@ on:
 
 jobs:
   test-windows-build:
-    name: Test Windows Build
+    name: Test Windows Build (Visual Studio)
     runs-on: windows-latest
     permissions:
       contents: read
@@ -64,8 +64,65 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: GameEngine-Windows-Test-${{ github.sha }}
+          name: GameEngine-Windows-MSVC-Test-${{ github.sha }}
           path: build/bin/Release/GameEngine.exe
+          retention-days: 7
+  
+  test-windows-mingw-build:
+    name: Test Windows Build (MinGW)
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.20.x'
+      
+      - name: Setup MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+          version: 13.2.0
+      
+      - name: Verify MinGW Installation
+        run: |
+          g++ --version
+          mingw32-make --version
+      
+      - name: Configure CMake with MinGW
+        run: |
+          mkdir build-mingw
+          cd build-mingw
+          cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+      
+      - name: Build Release
+        run: |
+          cd build-mingw
+          cmake --build . --config Release -j 4
+      
+      - name: Verify Build Output
+        run: |
+          if (Test-Path "build-mingw\bin\GameEngine.exe") {
+            Write-Host "✓ MinGW build successful: GameEngine.exe created"
+            Get-Item build-mingw\bin\GameEngine.exe | Format-List
+          } else {
+            Write-Error "✗ MinGW build failed: GameEngine.exe not found"
+            exit 1
+          }
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: GameEngine-Windows-MinGW-Test-${{ github.sha }}
+          path: build-mingw/bin/GameEngine.exe
           retention-days: 7
   
   test-linux-build:
