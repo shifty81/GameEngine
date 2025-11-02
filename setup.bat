@@ -168,39 +168,52 @@ REM ============================================================================
 REM Step 3: Check for Visual Studio / C++ Compiler
 REM ============================================================================
 echo [3/4] Checking for C++ compiler...
+echo.
 
-REM Try to find Visual Studio using vswhere
-set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
-if exist "%VSWHERE%" (
-    for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do (
-        set VS_PATH=%%i
+REM Use the new comprehensive compiler detection script
+if exist "tools\check-vs2022-compiler.bat" (
+    call tools\check-vs2022-compiler.bat
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo The compiler detection script found issues with your Visual Studio installation.
+        echo.
+        choice /C YN /M "Would you like to automatically open the Visual Studio Installer to fix these issues?"
+        if errorlevel 2 (
+            choice /C YN /M "Continue setup anyway"
+            if errorlevel 2 exit /b 1
+        ) else (
+            echo.
+            echo Launching Visual Studio Installer with AutoFix...
+            call tools\check-vs2022-compiler.bat -autofix
+            echo.
+            echo After modifying Visual Studio, please run this setup script again.
+            pause
+            exit /b 1
+        )
     )
-)
-
-if defined VS_PATH (
-    echo    Visual Studio found: %VS_PATH%
-    echo    C++ compiler: OK
 ) else (
-    echo    WARNING: Visual Studio C++ compiler not detected
-    echo.
-    echo    To build this project, you need Visual Studio with C++ support.
-    echo.
-    echo    Option 1: Install Visual Studio Community (Free)
-    echo       1. Download from: https://visualstudio.microsoft.com/downloads/
-    echo       2. Run installer
-    echo       3. Select "Desktop development with C++" workload
-    echo       4. Click Install
-    echo.
-    echo    Option 2: Install Build Tools for Visual Studio (No IDE)
-    echo       1. Download from: https://visualstudio.microsoft.com/downloads/
-    echo       2. Scroll to "Tools for Visual Studio"
-    echo       3. Download "Build Tools for Visual Studio"
-    echo       4. Select "Desktop development with C++" workload
-    echo.
-    echo    After installation, run this script again.
-    echo.
-    choice /C YN /M "Continue anyway"
-    if errorlevel 2 exit /b 1
+    REM Fallback to simple vswhere check if detection script is missing
+    set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+    if exist "%VSWHERE%" (
+        for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do (
+            set VS_PATH=%%i
+        )
+    )
+    
+    if defined VS_PATH (
+        echo    Visual Studio found: %VS_PATH%
+        echo    C++ compiler: OK
+    ) else (
+        echo    WARNING: Visual Studio C++ compiler not detected
+        echo.
+        echo    To build this project, you need Visual Studio with C++ support.
+        echo.
+        echo    Download from: https://visualstudio.microsoft.com/downloads/
+        echo    Select "Desktop development with C++" workload during installation
+        echo.
+        choice /C YN /M "Continue anyway"
+        if errorlevel 2 exit /b 1
+    )
 )
 echo.
 
