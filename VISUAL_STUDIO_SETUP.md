@@ -114,7 +114,9 @@ This guide provides **specific version numbers** and **detailed visual instructi
 
 **This is the MOST IMPORTANT step!** You must select the correct workload.
 
-**⚠️ If you skip this step or don't select the C++ workload, the build will fail!** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) if you encounter "No CMAKE_CXX_COMPILER could be found" errors later.
+**⚠️ Important Notes:**
+- If you skip this step or don't select the C++ workload, the build will fail
+- See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) if you encounter "No CMAKE_CXX_COMPILER could be found" errors later
 
 1. **Click the "Install" button** (for new installation)
    - Or click "Modify" if Visual Studio is already installed

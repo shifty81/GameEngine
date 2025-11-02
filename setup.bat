@@ -14,7 +14,7 @@ echo ========================================
 echo GameEngine - Automated Setup
 echo ========================================
 echo.
-echo WARNING: Having issues? See TROUBLESHOOTING.md for help
+echo Having issues? See TROUBLESHOOTING.md for help
 echo.
 
 REM Check if running as administrator (needed for some installations)

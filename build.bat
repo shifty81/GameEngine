@@ -3,7 +3,7 @@ echo ================================
 echo 3D Game Engine - Build Script
 echo ================================
 echo.
-echo WARNING: Having build issues? See TROUBLESHOOTING.md or WINDOWS_TROUBLESHOOTING.md
+echo Having build issues? See TROUBLESHOOTING.md or WINDOWS_TROUBLESHOOTING.md
 echo.
 
 REM ============================================================================
