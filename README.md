@@ -47,6 +47,12 @@ This engine now includes **all essential game engine systems** for production-re
 - 🔍 **OpenGL Debugger** - Automatic OpenGL error detection and logging
 - ⏱️ **High-Precision Timers** - Performance measurement tools
 
+### 🎯 Platform Integration
+- 🎮 **itch.io Integration** - Seamless user authentication, purchase verification, and profile access
+- 🔑 **OAuth Support** - User authentication for standalone and web builds
+- ☁️ **Cloud Save Ready** - User ID-based save system for cross-device sync
+- 🏆 **Achievement Framework** - Backend-ready achievement tracking system
+
 ### ⚠️ Integration-Ready Systems
 - ⚛️ **Physics Framework** - AABB collision, rigid bodies (integrate Bullet/PhysX)
 - 🔊 **Audio Framework** - 3D spatial audio system (integrate OpenAL/FMOD)
@@ -406,6 +412,8 @@ GameEngine/
 │   ├── Model.h                   # 3D model loading and rendering
 │   ├── TextureLoader.h           # Texture loading with stb_image
 │   ├── AssetManager.h            # Asset management system
+│   ├── ItchIO.h                  # ✨ NEW - itch.io platform integration
+│   ├── ItchIOExample.cpp         # ✨ NEW - itch.io usage examples
 │   ├── InputManager.h            # ✨ NEW - Keyboard/mouse/gamepad input
 │   ├── EventSystem.h             # ✨ NEW - Event bus system
 │   ├── LightSystem.h             # ✨ NEW - Advanced lighting (directional/point/spot)
@@ -429,6 +437,7 @@ GameEngine/
 ├── README.md                     # This file
 ├── ENGINE_SYSTEMS.md             # ✨ NEW - Complete systems documentation
 ├── ASSET_PIPELINE.md             # Asset integration guide
+├── ITCHIO_INTEGRATION.md         # ✨ NEW - itch.io platform integration guide
 └── QUICKSTART.md                 # Quick start guide
 ```
 
@@ -445,6 +454,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
+- **[ITCHIO_INTEGRATION.md](ITCHIO_INTEGRATION.md)** - itch.io platform integration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners
 - **[ASSET_PIPELINE.md](ASSET_PIPELINE.md)** - 3D asset integration guide
 - **[FEATURES.md](FEATURES.md)** - Detailed feature list
@@ -472,6 +482,42 @@ treeModel->Draw(shader);
 ```
 
 See **ASSET_PIPELINE.md** for complete integration guide.
+
+### Integrating with itch.io
+
+Seamlessly integrate your game with the itch.io platform:
+
+```cpp
+#include "ItchIO.h"
+
+int main() {
+    // Initialize itch.io integration
+    ItchIO itchio;
+    
+    if (itchio.IsAvailable() && itchio.Initialize()) {
+        // Get user profile
+        auto profile = itchio.GetUserProfile();
+        std::cout << "Welcome, " << profile->username << "!" << std::endl;
+        
+        // Verify purchase
+        if (itchio.VerifyPurchase("your-game-id")) {
+            enablePremiumFeatures();
+        }
+        
+        // Use profile->id for cloud saves
+        loadCloudSave(profile->id);
+    }
+    
+    // Your game code...
+}
+```
+
+See **ITCHIO_INTEGRATION.md** for complete guide including:
+- User authentication
+- Purchase verification
+- Cloud save integration
+- Achievement systems
+- Publishing to itch.io
 
 ### Adding New Features
 The engine is designed to be easily extensible:

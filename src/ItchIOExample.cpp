@@ -1,0 +1,335 @@
+/**
+ * @file ItchIOExample.cpp
+ * @brief Example demonstrating itch.io integration in your game
+ * 
+ * This file shows how to use the ItchIO integration system to:
+ * - Authenticate users when launched from itch.io app
+ * - Get user profile information
+ * - Verify game purchases
+ * - Enable premium features for verified users
+ * 
+ * To compile and run this example:
+ * 1. Include ItchIO.h in your project
+ * 2. Launch from itch.io app (or set ITCHIO_API_KEY environment variable)
+ * 3. See console output for authentication status
+ */
+
+#include <iostream>
+#include <memory>
+#include "ItchIO.h"
+
+/**
+ * @brief Example game class showing itch.io integration
+ */
+class ExampleGame {
+private:
+    std::unique_ptr<ItchIO> itchio_;
+    std::shared_ptr<ItchIO::UserProfile> current_user_;
+    bool is_premium_version_ = false;
+    
+public:
+    /**
+     * @brief Initialize the game and itch.io integration
+     */
+    void Initialize() {
+        std::cout << "========================================" << std::endl;
+        std::cout << "  Game Engine - itch.io Integration Demo" << std::endl;
+        std::cout << "========================================\n" << std::endl;
+        
+        // Create itch.io API instance
+        itchio_ = std::make_unique<ItchIO>();
+        
+        // Check if itch.io integration is available
+        if (!itchio_->IsAvailable()) {
+            std::cout << "[Info] itch.io integration not available" << std::endl;
+            std::cout << "[Info] Game launched outside itch.io app" << std::endl;
+            std::cout << "[Info] Running in standalone mode\n" << std::endl;
+            return;
+        }
+        
+        std::cout << "[Success] itch.io API key detected!" << std::endl;
+        std::cout << "[Info] Initializing itch.io connection...\n" << std::endl;
+        
+        // Initialize and authenticate
+        if (!itchio_->Initialize()) {
+            std::cerr << "[Error] Failed to initialize itch.io API" << std::endl;
+            std::cerr << "[Error] Check your internet connection\n" << std::endl;
+            return;
+        }
+        
+        std::cout << "[Success] itch.io API initialized!\n" << std::endl;
+        
+        // Get user profile
+        LoadUserProfile();
+        
+        // Verify purchase (use your actual game ID here)
+        VerifyPurchaseStatus("your-game-id-here");
+        
+        std::cout << "\n========================================\n" << std::endl;
+    }
+    
+    /**
+     * @brief Load and display user profile information
+     */
+    void LoadUserProfile() {
+        std::cout << "[Info] Fetching user profile..." << std::endl;
+        
+        current_user_ = itchio_->GetUserProfile();
+        
+        if (!current_user_) {
+            std::cerr << "[Error] Failed to load user profile" << std::endl;
+            return;
+        }
+        
+        // Display user information
+        std::cout << "\n--- User Profile ---" << std::endl;
+        std::cout << "User ID:      " << current_user_->id << std::endl;
+        std::cout << "Username:     " << current_user_->username << std::endl;
+        std::cout << "Display Name: " << current_user_->display_name << std::endl;
+        std::cout << "Profile URL:  " << current_user_->url << std::endl;
+        std::cout << "Account Type: ";
+        
+        if (current_user_->developer) {
+            std::cout << "Developer";
+        } else if (current_user_->gamer) {
+            std::cout << "Gamer";
+        } else if (current_user_->press_user) {
+            std::cout << "Press/Media";
+        } else {
+            std::cout << "User";
+        }
+        std::cout << std::endl;
+        
+        // Special features for developers
+        if (current_user_->developer) {
+            std::cout << "\n[Info] Developer account detected!" << std::endl;
+            std::cout << "[Info] Enabling developer tools..." << std::endl;
+            EnableDeveloperMode();
+        }
+        
+        std::cout << "-------------------\n" << std::endl;
+    }
+    
+    /**
+     * @brief Verify if user purchased the game
+     * @param game_id Your game's itch.io ID
+     */
+    void VerifyPurchaseStatus(const std::string& game_id) {
+        std::cout << "[Info] Verifying purchase status..." << std::endl;
+        
+        if (!itchio_ || !itchio_->IsInitialized()) {
+            std::cout << "[Warning] Cannot verify purchase - itch.io not initialized" << std::endl;
+            return;
+        }
+        
+        is_premium_version_ = itchio_->VerifyPurchase(game_id);
+        
+        if (is_premium_version_) {
+            std::cout << "[Success] Purchase verified!" << std::endl;
+            std::cout << "[Info] Enabling premium features..." << std::endl;
+            EnablePremiumFeatures();
+        } else {
+            std::cout << "[Info] Free version detected" << std::endl;
+            std::cout << "[Info] Upgrade to unlock premium features!" << std::endl;
+        }
+    }
+    
+    /**
+     * @brief Enable premium features for verified users
+     */
+    void EnablePremiumFeatures() {
+        std::cout << "\n--- Premium Features Enabled ---" << std::endl;
+        std::cout << "✓ All game modes unlocked" << std::endl;
+        std::cout << "✓ Exclusive skins and items" << std::endl;
+        std::cout << "✓ Cloud save sync" << std::endl;
+        std::cout << "✓ Achievement tracking" << std::endl;
+        std::cout << "✓ Premium support" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
+    }
+    
+    /**
+     * @brief Enable developer mode features
+     */
+    void EnableDeveloperMode() {
+        std::cout << "\n--- Developer Mode Enabled ---" << std::endl;
+        std::cout << "✓ Debug console" << std::endl;
+        std::cout << "✓ Performance metrics" << std::endl;
+        std::cout << "✓ Level editor" << std::endl;
+        std::cout << "✓ Asset inspector" << std::endl;
+        std::cout << "------------------------------" << std::endl;
+    }
+    
+    /**
+     * @brief Display main menu with user-specific options
+     */
+    void ShowMainMenu() {
+        std::cout << "\n========================================" << std::endl;
+        std::cout << "            MAIN MENU" << std::endl;
+        std::cout << "========================================" << std::endl;
+        
+        if (current_user_) {
+            std::cout << "Logged in as: " << current_user_->display_name << std::endl;
+            std::cout << "----------------------------------------" << std::endl;
+        }
+        
+        std::cout << "1. Start Game" << std::endl;
+        std::cout << "2. Options" << std::endl;
+        std::cout << "3. Credits" << std::endl;
+        
+        if (current_user_) {
+            std::cout << "4. View Profile" << std::endl;
+            
+            if (is_premium_version_) {
+                std::cout << "5. Premium Content (★ UNLOCKED)" << std::endl;
+            } else {
+                std::cout << "5. Upgrade to Premium" << std::endl;
+            }
+            
+            if (current_user_->developer) {
+                std::cout << "6. Developer Tools" << std::endl;
+            }
+        }
+        
+        std::cout << "0. Exit" << std::endl;
+        std::cout << "========================================" << std::endl;
+    }
+    
+    /**
+     * @brief Check if user has premium version
+     */
+    bool HasPremiumVersion() const {
+        return is_premium_version_;
+    }
+    
+    /**
+     * @brief Get current user profile
+     */
+    const ItchIO::UserProfile* GetCurrentUser() const {
+        return current_user_.get();
+    }
+    
+    /**
+     * @brief Check if itch.io integration is active
+     */
+    bool IsItchIOActive() const {
+        return itchio_ && itchio_->IsInitialized();
+    }
+};
+
+/**
+ * @brief Example function showing cloud save integration
+ */
+void ExampleCloudSaveIntegration() {
+    ItchIO itchio;
+    
+    if (itchio.Initialize()) {
+        auto profile = itchio.GetUserProfile();
+        if (profile) {
+            std::cout << "\n=== Cloud Save Example ===" << std::endl;
+            std::cout << "User ID: " << profile->id << std::endl;
+            std::cout << "Save file path: saves/user_" << profile->id << ".dat" << std::endl;
+            
+            // In real implementation, you would:
+            // 1. Use profile->id to identify user's save file
+            // 2. Upload to your cloud backend
+            // 3. Use itchio.GetAPIKey() for authentication
+            
+            std::cout << "Note: Implement your own cloud backend for save sync" << std::endl;
+            std::cout << "=========================\n" << std::endl;
+        }
+    }
+}
+
+/**
+ * @brief Example function showing achievement system
+ */
+void ExampleAchievementSystem() {
+    ItchIO itchio;
+    
+    if (itchio.Initialize()) {
+        auto profile = itchio.GetUserProfile();
+        if (profile) {
+            std::cout << "\n=== Achievement System Example ===" << std::endl;
+            std::cout << "User: " << profile->username << std::endl;
+            
+            // Example: Unlock achievement
+            std::cout << "Simulating achievement unlock..." << std::endl;
+            std::cout << "✓ Achievement Unlocked: 'First Steps'" << std::endl;
+            
+            // In real implementation:
+            // 1. Send achievement data to your backend
+            // 2. Use profile->id to associate with user
+            // 3. Use itchio.GetAPIKey() for authentication
+            
+            std::cout << "Note: itch.io doesn't have native achievements" << std::endl;
+            std::cout << "Implement your own backend for achievement tracking" << std::endl;
+            std::cout << "==================================\n" << std::endl;
+        }
+    }
+}
+
+/**
+ * @brief Main function - entry point for the example
+ */
+int main() {
+    // Create and initialize game
+    ExampleGame game;
+    game.Initialize();
+    
+    // Show main menu
+    game.ShowMainMenu();
+    
+    // Example: Check features
+    std::cout << "\n=== Feature Status ===" << std::endl;
+    std::cout << "itch.io Active: " << (game.IsItchIOActive() ? "Yes" : "No") << std::endl;
+    std::cout << "Premium Version: " << (game.HasPremiumVersion() ? "Yes" : "No") << std::endl;
+    
+    if (game.GetCurrentUser()) {
+        std::cout << "User: " << game.GetCurrentUser()->username << std::endl;
+    } else {
+        std::cout << "User: Not logged in" << std::endl;
+    }
+    std::cout << "=====================\n" << std::endl;
+    
+    // Show additional examples
+    if (game.IsItchIOActive()) {
+        ExampleCloudSaveIntegration();
+        ExampleAchievementSystem();
+    }
+    
+    // Your game loop would go here
+    std::cout << "[Info] Example completed successfully!" << std::endl;
+    std::cout << "[Info] In a real game, this is where your game loop would start" << std::endl;
+    
+    return 0;
+}
+
+/**
+ * USAGE INSTRUCTIONS:
+ * 
+ * 1. Testing from itch.io app:
+ *    - Upload your game to itch.io
+ *    - Install via the itch.io app
+ *    - Launch from the app
+ *    - The integration will work automatically
+ * 
+ * 2. Testing without itch.io app:
+ *    Windows:
+ *      set ITCHIO_API_KEY=test_key_here
+ *      GameEngine.exe
+ *    
+ *    Linux/Mac:
+ *      export ITCHIO_API_KEY=test_key_here
+ *      ./GameEngine
+ * 
+ * 3. Production deployment:
+ *    - Create a .itch.toml manifest file
+ *    - Upload to itch.io with proper configuration
+ *    - Users will get automatic integration
+ * 
+ * 4. Customization:
+ *    - Replace "your-game-id-here" with your actual game ID
+ *    - Implement cloud save backend if needed
+ *    - Add achievement tracking backend if desired
+ *    - Customize premium features to match your game
+ */

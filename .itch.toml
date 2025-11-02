@@ -1,0 +1,56 @@
+# itch.io App Manifest
+# This file configures how your game integrates with the itch.io app
+# Place this file in the root directory of your game alongside the executable
+
+# Main game action - this is what runs when user clicks "Play"
+[[actions]]
+name = "play"
+path = "bin/Release/GameEngine.exe"  # Windows executable path
+platform = "windows"
+scope = "profile:me"  # Request user profile access
+
+# Alternative: Linux executable
+[[actions]]
+name = "play"
+path = "bin/GameEngine"  # Linux executable path
+platform = "linux"
+scope = "profile:me"
+
+# Alternative: macOS executable
+[[actions]]
+name = "play"
+path = "bin/GameEngine"  # macOS executable path
+platform = "osx"
+scope = "profile:me"
+
+# Optional: Windowed mode launcher
+[[actions]]
+name = "play-windowed"
+path = "bin/Release/GameEngine.exe"
+args = ["--windowed"]
+platform = "windows"
+scope = "profile:me"
+
+# Optional: Debug mode (for developers)
+[[actions]]
+name = "debug"
+path = "bin/Debug/GameEngine.exe"
+args = ["--debug"]
+platform = "windows"
+scope = "profile:me"
+
+# Prerequisites (if your game needs specific redistributables)
+[[prereqs]]
+name = "vcredist-2019-x64"  # Visual C++ Redistributable 2019
+
+# Manifest version
+manifest_version = 1
+
+# Note: The itch.io app will automatically set the ITCHIO_API_KEY environment
+# variable when launching your game, which the ItchIO integration will detect.
+#
+# Scopes explained:
+# - profile:me : Allows your game to access the user's profile (username, ID, etc.)
+# - profile:games : Allows checking which games the user owns
+#
+# You can add additional scopes as needed for your game's features.
