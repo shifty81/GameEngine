@@ -2,6 +2,27 @@
 
 This guide will help you get the 3D Game Engine running on your Windows machine in minutes.
 
+## 🚀 Choose Your Path
+
+### Path 1: Pre-built Binaries (Easiest - No Compilation!)
+
+**Don't want to install Visual Studio or compile code?**
+
+👉 **[Download Pre-built Binaries](DOWNLOAD_BINARIES.md)**
+
+- ✅ Download ready-to-use executables
+- ✅ No Visual Studio needed
+- ✅ No build tools required
+- ✅ Just download, extract, and run!
+
+**Continue below only if you want to build from source.**
+
+---
+
+### Path 2: Build from Source (For Developers)
+
+Follow the steps below to set up your development environment and build the engine yourself.
+
 ## Step 1: Prerequisites
 
 ### Install Required Software
