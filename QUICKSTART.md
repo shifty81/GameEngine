@@ -2,6 +2,27 @@
 
 This guide will help you get the 3D Game Engine running on your Windows machine in minutes.
 
+## 🚀 Choose Your Path
+
+### Path 1: Pre-built Binaries (Easiest - No Compilation!)
+
+**Don't want to install Visual Studio or compile code?**
+
+👉 **[Download Pre-built Binaries](DOWNLOAD_BINARIES.md)**
+
+- ✅ Download ready-to-use executables
+- ✅ No Visual Studio needed
+- ✅ No build tools required
+- ✅ Just download, extract, and run!
+
+**Continue below only if you want to build from source.**
+
+---
+
+### Path 2: Build from Source (For Developers)
+
+Follow the steps below to set up your development environment and build the engine yourself.
+
 ## Step 1: Prerequisites
 
 ### Install Required Software
@@ -15,9 +36,12 @@ This guide will help you get the 3D Game Engine running on your Windows machine 
    - Choose "Windows x64 Installer"
    - During installation, select "Add CMake to system PATH"
 
-3. **Visual Studio 2019 or newer** (Community Edition is free)
+3. **Visual Studio 2022 or 2019** (Community Edition is free)
+   - **Recommended:** Visual Studio Community 2022 (version 17.8 or newer, preferably 17.11+)
+   - **Alternative:** Visual Studio Community 2019 (version 16.11 or newer)
    - Download from: https://visualstudio.microsoft.com/downloads/
    - During installation, select "Desktop development with C++"
+   - **📖 For detailed installation with visual instructions, see [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)**
 
 ## Step 2: Clone and Build
 

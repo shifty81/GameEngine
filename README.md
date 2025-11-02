@@ -2,6 +2,25 @@
 
 A professional-grade 3D game engine built with C++ and OpenGL, featuring procedural world generation, advanced rendering systems, and comprehensive game development tools.
 
+## 🚀 Quick Start Options
+
+### Option 1: Download Pre-built Binaries (No Compilation Required!)
+
+**Just want to run the engine?** Download ready-to-use executables:
+
+👉 **[Download Pre-built Binaries](DOWNLOAD_BINARIES.md)** - Windows & Linux available
+
+- ✅ No Visual Studio or compiler needed
+- ✅ No build process required
+- ✅ Just download, extract, and run!
+- ✅ Perfect for trying out the engine
+
+### Option 2: Build from Source (For Developers)
+
+Want to modify the code or contribute? See [Building the Engine](#building-the-engine) section below.
+
+---
+
 ## 🎮 Complete Engine Systems
 
 This engine now includes **all essential game engine systems** for production-ready game development!
@@ -90,7 +109,10 @@ This engine now includes **all essential game engine systems** for production-re
 
 #### Windows
 - CMake 3.20 or higher
-- Visual Studio 2019 or newer (with C++ desktop development for C++20 support)
+- **Visual Studio Community 2022 (version 17.8 or newer)** or Visual Studio 2019 (version 16.11 or newer)
+  - **Specific versions recommended:** Visual Studio 2022 v17.11+ (preferred) or Visual Studio 2019 v16.11+
+  - Must include **"Desktop development with C++"** workload for C++20 support
+  - See [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md) for detailed installation guide with visual instructions
 - Git
 
 #### Linux
@@ -141,10 +163,13 @@ Before building, ensure you have the following installed:
    - Verify installation: Run `cmake --version` in Command Prompt
    - You should see `cmake version 3.15.0` or higher
 
-3. **Visual Studio 2019 or newer**
+3. **Visual Studio 2022 (version 17.8+) or Visual Studio 2019 (version 16.11+)**
+   - **Recommended:** Visual Studio Community 2022 version 17.8 or newer (Latest: 17.11+)
+   - **Alternative:** Visual Studio Community 2019 version 16.11 or newer
    - Download Community Edition (free) from: https://visualstudio.microsoft.com/downloads/
    - During installation, select the **"Desktop development with C++"** workload
-   - This installs the C++ compiler (MSVC), Windows SDK, and build tools
+   - This installs the C++ compiler (MSVC v143/v142), Windows SDK, and build tools
+   - **📖 See [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md) for step-by-step installation guide with visual diagrams**
 
 ##### Step 1: Clone the Repository
 
@@ -604,9 +629,12 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
+- **[DOWNLOAD_BINARIES.md](DOWNLOAD_BINARIES.md)** - 📦 Download pre-built executables (no compilation needed!)
+- **[VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)** - 📖 Detailed Visual Studio installation guide with specific versions and visual instructions
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
 - **[DEBUG_CONSOLE_GUIDE.md](DEBUG_CONSOLE_GUIDE.md)** - Debug console usage and command reference
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive cross-platform troubleshooting guide
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific troubleshooting
 - **[VERSION_UPDATES.md](VERSION_UPDATES.md)** - Architecture modernization and dependency updates
 - **[ITCHIO_ASSETS.md](ITCHIO_ASSETS.md)** - Easy itch.io asset integration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners

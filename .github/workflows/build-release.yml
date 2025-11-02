@@ -1,0 +1,257 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-windows:
+    name: Build Windows Release
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
+      
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.20.x'
+      
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake -G "Visual Studio 17 2022" -A x64 ..
+      
+      - name: Build Release
+        run: |
+          cd build
+          cmake --build . --config Release --parallel
+      
+      - name: Package Release
+        run: |
+          mkdir GameEngine-Windows
+          
+          # Copy executable
+          copy build\bin\Release\GameEngine.exe GameEngine-Windows\
+          
+          # Copy assets
+          xcopy /E /I /Y assets GameEngine-Windows\assets
+          
+          # Copy documentation
+          copy README.md GameEngine-Windows\
+          copy QUICKSTART.md GameEngine-Windows\
+          copy LICENSE GameEngine-Windows\
+          
+          # Create a simple run script
+          echo @echo off > GameEngine-Windows\run.bat
+          echo echo ================================ >> GameEngine-Windows\run.bat
+          echo echo 3D Game Engine >> GameEngine-Windows\run.bat
+          echo echo ================================ >> GameEngine-Windows\run.bat
+          echo echo. >> GameEngine-Windows\run.bat
+          echo GameEngine.exe >> GameEngine-Windows\run.bat
+          
+          # Create README for binary distribution
+          echo # GameEngine - Pre-built Release > GameEngine-Windows\README_BINARIES.txt
+          echo. >> GameEngine-Windows\README_BINARIES.txt
+          echo This is a pre-built binary release of the 3D Game Engine. >> GameEngine-Windows\README_BINARIES.txt
+          echo No compilation required! >> GameEngine-Windows\README_BINARIES.txt
+          echo. >> GameEngine-Windows\README_BINARIES.txt
+          echo ## Quick Start >> GameEngine-Windows\README_BINARIES.txt
+          echo 1. Double-click run.bat >> GameEngine-Windows\README_BINARIES.txt
+          echo 2. Or run GameEngine.exe directly >> GameEngine-Windows\README_BINARIES.txt
+          echo. >> GameEngine-Windows\README_BINARIES.txt
+          echo ## System Requirements >> GameEngine-Windows\README_BINARIES.txt
+          echo - Windows 10/11 (64-bit) >> GameEngine-Windows\README_BINARIES.txt
+          echo - OpenGL 3.3+ compatible graphics card >> GameEngine-Windows\README_BINARIES.txt
+          echo - Microsoft Visual C++ Redistributable 2022 >> GameEngine-Windows\README_BINARIES.txt
+          echo   Download from: https://aka.ms/vs/17/release/vc_redist.x64.exe >> GameEngine-Windows\README_BINARIES.txt
+          echo. >> GameEngine-Windows\README_BINARIES.txt
+          echo ## Controls >> GameEngine-Windows\README_BINARIES.txt
+          echo - WASD - Move camera >> GameEngine-Windows\README_BINARIES.txt
+          echo - Mouse - Look around >> GameEngine-Windows\README_BINARIES.txt
+          echo - Space - Fly up >> GameEngine-Windows\README_BINARIES.txt
+          echo - Left Shift - Fly down >> GameEngine-Windows\README_BINARIES.txt
+          echo - F - Toggle wireframe >> GameEngine-Windows\README_BINARIES.txt
+          echo - C - Toggle cell shading >> GameEngine-Windows\README_BINARIES.txt
+          echo - ` (Grave) - Toggle debug console >> GameEngine-Windows\README_BINARIES.txt
+          echo - ESC - Exit >> GameEngine-Windows\README_BINARIES.txt
+          echo. >> GameEngine-Windows\README_BINARIES.txt
+          echo For source code and development documentation, visit: >> GameEngine-Windows\README_BINARIES.txt
+          echo https://github.com/shifty81/GameEngine >> GameEngine-Windows\README_BINARIES.txt
+      
+      - name: Create ZIP archive
+        run: |
+          Compress-Archive -Path GameEngine-Windows\* -DestinationPath GameEngine-Windows-x64.zip
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameEngine-Windows-x64
+          path: GameEngine-Windows-x64.zip
+          retention-days: 90
+  
+  build-linux:
+    name: Build Linux Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libgl1-mesa-dev libglu1-mesa-dev \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+      
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+      
+      - name: Build Release
+        run: |
+          cd build
+          make -j$(nproc)
+      
+      - name: Package Release
+        run: |
+          mkdir GameEngine-Linux
+          
+          # Copy executable
+          cp build/bin/GameEngine GameEngine-Linux/
+          
+          # Copy assets
+          cp -r assets GameEngine-Linux/
+          
+          # Copy documentation
+          cp README.md GameEngine-Linux/
+          cp QUICKSTART.md GameEngine-Linux/
+          cp LICENSE GameEngine-Linux/
+          
+          # Create run script
+          cat > GameEngine-Linux/run.sh << 'EOF'
+          #!/bin/bash
+          echo "================================"
+          echo "3D Game Engine"
+          echo "================================"
+          echo ""
+          ./GameEngine
+          EOF
+          chmod +x GameEngine-Linux/run.sh
+          chmod +x GameEngine-Linux/GameEngine
+          
+          # Create README for binary distribution
+          cat > GameEngine-Linux/README_BINARIES.txt << 'EOF'
+          # GameEngine - Pre-built Release
+          
+          This is a pre-built binary release of the 3D Game Engine.
+          No compilation required!
+          
+          ## Quick Start
+          1. Run ./run.sh
+          2. Or run ./GameEngine directly
+          
+          ## System Requirements
+          - Linux (64-bit) - Ubuntu 20.04+ or equivalent
+          - OpenGL 3.3+ compatible graphics card
+          - Required libraries:
+            sudo apt-get install libgl1-mesa-glx libglu1-mesa libx11-6 libxrandr2 libxinerama1 libxcursor1 libxi6
+          
+          ## Controls
+          - WASD - Move camera
+          - Mouse - Look around
+          - Space - Fly up
+          - Left Shift - Fly down
+          - F - Toggle wireframe
+          - C - Toggle cell shading
+          - ` (Grave) - Toggle debug console
+          - ESC - Exit
+          
+          For source code and development documentation, visit:
+          https://github.com/shifty81/GameEngine
+          EOF
+      
+      - name: Create TAR archive
+        run: |
+          tar -czf GameEngine-Linux-x64.tar.gz GameEngine-Linux/
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GameEngine-Linux-x64
+          path: GameEngine-Linux-x64.tar.gz
+          retention-days: 90
+  
+  create-release:
+    name: Create GitHub Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: GameEngine-Windows-x64
+      
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: GameEngine-Linux-x64
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            GameEngine-Windows-x64.zip
+            GameEngine-Linux-x64.tar.gz
+          body: |
+            ## 3D Game Engine - Pre-built Binaries
+            
+            Download and run the engine without needing to compile from source!
+            
+            ### Downloads
+            - **Windows**: `GameEngine-Windows-x64.zip`
+            - **Linux**: `GameEngine-Linux-x64.tar.gz`
+            
+            ### Windows Quick Start
+            1. Download `GameEngine-Windows-x64.zip`
+            2. Extract the ZIP file
+            3. Install [Visual C++ Redistributable 2022](https://aka.ms/vs/17/release/vc_redist.x64.exe) if not already installed
+            4. Run `GameEngine.exe` or `run.bat`
+            
+            ### Linux Quick Start
+            1. Download `GameEngine-Linux-x64.tar.gz`
+            2. Extract: `tar -xzf GameEngine-Linux-x64.tar.gz`
+            3. Install dependencies: `sudo apt-get install libgl1-mesa-glx libglu1-mesa libx11-6 libxrandr2 libxinerama1 libxcursor1 libxi6`
+            4. Run: `./GameEngine-Linux/run.sh`
+            
+            ### System Requirements
+            - **OS**: Windows 10/11 (64-bit) or Linux (64-bit)
+            - **Graphics**: OpenGL 3.3+ compatible GPU
+            - **RAM**: 2GB minimum, 4GB recommended
+            
+            ### For Developers
+            Want to build from source or contribute? See the [README](https://github.com/shifty81/GameEngine/blob/main/README.md) for development setup instructions.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

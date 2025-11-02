@@ -1,24 +1,43 @@
 # Windows Build Troubleshooting Guide
 
+**Before troubleshooting:** For detailed Visual Studio installation instructions with visual guides, see [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md).
+
+## Visual Studio Version Requirements
+
+**This project requires:**
+- **Visual Studio Community 2022** (version 17.8 or newer, recommended: 17.11+)
+- **OR Visual Studio Community 2019** (version 16.11 or newer)
+- With **"Desktop development with C++"** workload installed
+
+**How to check your version:**
+- Open "Visual Studio Installer" from Windows Start menu
+- Look at the version number below "Visual Studio Community 2022" or "2019"
+- Example: "Version 17.11.5" means Visual Studio 2022 version 17.11.5
+
 ## Error: "No CMAKE_CXX_COMPILER could be found" or "The CXX compiler identification is unknown"
 
 This error occurs when Visual Studio is installed without the C++ compiler tools. Here's how to fix it:
 
 ### Solution 1: Install C++ Desktop Development Workload (Recommended)
 
+**📖 For detailed visual guide, see [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md) Step 3**
+
 1. **Open Visual Studio Installer**
    - Search for "Visual Studio Installer" in Windows Start Menu
    - Or download from: https://visualstudio.microsoft.com/downloads/
+   - **Recommended version:** Visual Studio Community 2022 (v17.8+ or newer)
 
 2. **Modify Your Installation**
    - Click the "Modify" button next to your Visual Studio installation
    - If Visual Studio isn't installed, click "Install" and select Community Edition (free)
+   - **Important:** Make sure you're installing Visual Studio 2022 (v17.8+) or Visual Studio 2019 (v16.11+)
 
 3. **Select the Required Workload**
    - Check the box for **"Desktop development with C++"**
    - This installs:
-     - MSVC C++ compiler (cl.exe)
-     - Windows SDK
+     - MSVC v143 C++ compiler (cl.exe) for VS 2022
+     - MSVC v142 C++ compiler (cl.exe) for VS 2019
+     - Windows SDK (10.0.19041.0 or newer)
      - MSBuild tools
      - CMake integration
 
@@ -33,7 +52,9 @@ This error occurs when Visual Studio is installed without the C++ compiler tools
    # You can find these in Start Menu under Visual Studio 2022
    
    cl
-   # Should output: "Microsoft (R) C/C++ Optimizing Compiler..."
+   # Should output: "Microsoft (R) C/C++ Optimizing Compiler Version 19.38.xxxxx..."
+   # Version 19.38.x = VS 2022 v17.11
+   # Version 19.29.x = VS 2019 v16.11
    ```
 
 6. **Clean and Rebuild**
@@ -53,11 +74,14 @@ If you don't want the full Visual Studio IDE:
 1. **Download Build Tools for Visual Studio 2022**
    - https://visualstudio.microsoft.com/downloads/
    - Scroll down to "Tools for Visual Studio"
-   - Download "Build Tools for Visual Studio 2022"
+   - Download "Build Tools for Visual Studio 2022" (version 17.8 or newer)
 
 2. **Install with C++ Support**
    - Run the installer
    - Select "Desktop development with C++"
+   - Ensure these components are selected:
+     - MSVC v143 - VS 2022 C++ x64/x86 build tools
+     - Windows SDK (10.0.19041.0 or newer)
    - Click Install
 
 3. **Use from Command Line**
@@ -195,11 +219,14 @@ To build this project on Windows, you need:
    - Download from: https://cmake.org/download/
    - Select "Add CMake to system PATH" during installation
 
-2. **Visual Studio 2019 or newer** with:
+2. **Visual Studio 2022 (v17.8+) or Visual Studio 2019 (v16.11+)** with:
+   - **Recommended:** Visual Studio Community 2022 version 17.8 or newer (latest: 17.11+)
+   - **Alternative:** Visual Studio Community 2019 version 16.11 or newer
    - Desktop development with C++ workload
-   - MSVC compiler
-   - Windows SDK
+   - MSVC compiler (v143 for 2022, v142 for 2019)
+   - Windows SDK (10.0.19041.0 or newer)
    - C++20 support
+   - **📖 See [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md) for complete installation guide**
 
 3. **Git for Windows**
    - Download from: https://git-scm.com/download/win
