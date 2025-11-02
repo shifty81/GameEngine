@@ -482,6 +482,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
+- **[DEBUG_CONSOLE_GUIDE.md](DEBUG_CONSOLE_GUIDE.md)** - Debug console usage and command reference
 - **[VERSION_UPDATES.md](VERSION_UPDATES.md)** - Architecture modernization and dependency updates
 - **[ITCHIO_ASSETS.md](ITCHIO_ASSETS.md)** - Easy itch.io asset integration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners
