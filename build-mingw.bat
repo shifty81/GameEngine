@@ -229,6 +229,10 @@ echo.
 echo [✓] CMake configuration successful
 echo.
 
+REM Detect number of CPU cores for parallel compilation
+set NUMCPUS=%NUMBER_OF_PROCESSORS%
+if not defined NUMCPUS set NUMCPUS=4
+
 REM ============================================================================
 REM Step 6: Build the Project
 REM ============================================================================
@@ -237,11 +241,12 @@ echo.
 echo This may take 10-15 minutes on the first build as it compiles
 echo all dependencies (Assimp, GLFW, etc.)
 echo.
+echo Using %NUMCPUS% parallel jobs for compilation...
 echo Please be patient...
 echo.
 
-REM Build using MinGW make
-"%CMAKE_EXE%" --build . --config Release -j 8
+REM Build using MinGW make with parallel jobs
+"%CMAKE_EXE%" --build . --config Release -j %NUMCPUS%
 
 if %errorLevel% neq 0 (
     echo.

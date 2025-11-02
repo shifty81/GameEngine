@@ -145,9 +145,19 @@ jobs:
           
           # Copy MinGW runtime DLLs (required for distribution)
           $mingwPath = (Get-Command g++).Source | Split-Path
-          copy "$mingwPath\libgcc_s_seh-1.dll" GameEngine-Windows-MinGW\ -ErrorAction SilentlyContinue
-          copy "$mingwPath\libstdc++-6.dll" GameEngine-Windows-MinGW\ -ErrorAction SilentlyContinue
-          copy "$mingwPath\libwinpthread-1.dll" GameEngine-Windows-MinGW\ -ErrorAction SilentlyContinue
+          if (-not (Test-Path "$mingwPath\libgcc_s_seh-1.dll")) {
+            Write-Error "Required MinGW runtime DLLs not found at: $mingwPath"
+            exit 1
+          }
+          copy "$mingwPath\libgcc_s_seh-1.dll" GameEngine-Windows-MinGW\
+          copy "$mingwPath\libstdc++-6.dll" GameEngine-Windows-MinGW\
+          copy "$mingwPath\libwinpthread-1.dll" GameEngine-Windows-MinGW\
+          
+          # Verify DLLs were copied
+          if (-not (Test-Path "GameEngine-Windows-MinGW\libgcc_s_seh-1.dll")) {
+            Write-Error "Failed to copy MinGW runtime DLLs"
+            exit 1
+          }
           
           # Copy assets
           xcopy /E /I /Y assets GameEngine-Windows-MinGW\assets

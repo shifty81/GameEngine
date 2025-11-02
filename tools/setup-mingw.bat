@@ -24,13 +24,15 @@ REM Set MinGW installation directory
 set MINGW_DIR=%~dp0..\external\mingw64
 set MINGW_BIN=%MINGW_DIR%\bin
 set MINGW_VERSION=13.2.0
+set MINGW_RELEASE=13.2.0-16.0.6-11.0.0-ucrt-r1
 set MINGW_ARCH=x86_64
 set MINGW_THREADS=posix
 set MINGW_EXCEPTION=seh
 
 REM MinGW-w64 download URL (using winlibs.com builds - latest stable GCC)
-set MINGW_URL=https://github.com/brechtsanders/winlibs_mingw/releases/download/13.2.0-16.0.6-11.0.0-ucrt-r1/winlibs-x86_64-posix-seh-gcc-13.2.0-mingw-w64ucrt-11.0.0-r1.zip
+set MINGW_URL=https://github.com/brechtsanders/winlibs_mingw/releases/download/%MINGW_RELEASE%/winlibs-%MINGW_ARCH%-%MINGW_THREADS%-%MINGW_EXCEPTION%-gcc-%MINGW_VERSION%-mingw-w64ucrt-11.0.0-r1.zip
 set MINGW_ARCHIVE=mingw64.zip
+set MINGW_SHA256=
 
 REM ============================================================================
 REM Step 1: Check if MinGW is already installed
@@ -44,7 +46,7 @@ if exist "%MINGW_BIN%\g++.exe" (
     
     REM Test the compiler
     "%MINGW_BIN%\g++.exe" --version >nul 2>&1
-    if !errorLevel! equ 0 (
+    if %errorLevel% equ 0 (
         for /f "tokens=*" %%i in ('"%MINGW_BIN%\g++.exe" --version ^| findstr /C:"g++"') do (
             echo Compiler version: %%i
         )
@@ -105,6 +107,8 @@ if not exist "%~dp0..\external" mkdir "%~dp0..\external"
 
 REM Download using PowerShell
 echo Downloading...
+REM NOTE: For security, consider adding SHA256 checksum verification in production
+REM Example: After download, verify hash matches expected value before extraction
 powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri '%MINGW_URL%' -OutFile '%~dp0..\external\%MINGW_ARCHIVE%' -UseBasicParsing}"
 
 if %errorLevel% neq 0 (
