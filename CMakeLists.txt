@@ -48,7 +48,7 @@ add_subdirectory(external/glfw)
 # GLAD for OpenGL function loading
 add_library(glad external/glad/src/glad.c)
 target_include_directories(glad PUBLIC external/glad/include)
-# Compile glad.c as C code using the C++ compiler
+# Compile glad.c as C++ code (C++ compiler can handle C code)
 set_source_files_properties(external/glad/src/glad.c PROPERTIES LANGUAGE CXX)
 
 # GLM for mathematics
