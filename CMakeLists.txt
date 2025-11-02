@@ -7,6 +7,10 @@ cmake_minimum_required(VERSION 3.20)
 #   You need to install Visual Studio with the "Desktop development with C++" 
 #   workload. This installs the MSVC compiler (cl.exe).
 #   
+#   Supported Versions:
+#   - Visual Studio 2022 (v17.8 through v17.14 and newer) - Recommended
+#   - Visual Studio 2019 (v16.11 and newer) - Alternative
+#   
 #   Steps to fix:
 #   1. Download Visual Studio Community (free):
 #      https://visualstudio.microsoft.com/downloads/

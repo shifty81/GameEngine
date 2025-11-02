@@ -37,7 +37,8 @@ Follow the steps below to set up your development environment and build the engi
    - During installation, select "Add CMake to system PATH"
 
 3. **Visual Studio 2022 or 2019** (Community Edition is free)
-   - **Recommended:** Visual Studio Community 2022 (version 17.8 or newer, preferably 17.11+)
+   - **Recommended:** Visual Studio Community 2022 (version 17.8 or newer, including 17.14.x)
+   - **Tested versions:** VS 2022 v17.8 through v17.14 (all fully supported)
    - **Alternative:** Visual Studio Community 2019 (version 16.11 or newer)
    - Download from: https://visualstudio.microsoft.com/downloads/
    - During installation, select "Desktop development with C++"
