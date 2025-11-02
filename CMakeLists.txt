@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # =============================================================================
-# IMPORTANT: If you get "No CMAKE_C_COMPILER could be found" or 
-# "No CMAKE_CXX_COMPILER could be found" errors:
+# IMPORTANT: If you get "No CMAKE_CXX_COMPILER could be found" errors:
 #
 # Windows Users:
 #   You need to install Visual Studio with the "Desktop development with C++" 
@@ -24,14 +23,12 @@ cmake_minimum_required(VERSION 3.20)
 #   xcode-select --install
 # =============================================================================
 
-project(GameEngine VERSION 1.0.0 LANGUAGES C CXX)
+project(GameEngine VERSION 1.0.0 LANGUAGES CXX)
 
 # Use modern C++ standards
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -51,6 +48,8 @@ add_subdirectory(external/glfw)
 # GLAD for OpenGL function loading
 add_library(glad external/glad/src/glad.c)
 target_include_directories(glad PUBLIC external/glad/include)
+# Compile glad.c as C code using the C++ compiler
+set_source_files_properties(external/glad/src/glad.c PROPERTIES LANGUAGE CXX)
 
 # GLM for mathematics
 add_subdirectory(external/glm)

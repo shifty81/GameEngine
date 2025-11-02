@@ -1,6 +1,6 @@
 # Windows Build Troubleshooting Guide
 
-## Error: "No CMAKE_C_COMPILER could be found"
+## Error: "No CMAKE_CXX_COMPILER could be found" or "The CXX compiler identification is unknown"
 
 This error occurs when Visual Studio is installed without the C++ compiler tools. Here's how to fix it:
 
@@ -107,10 +107,9 @@ where cl
 Based on your output:
 ```
 -- Building for: Visual Studio 17 2022
--- The C compiler identification is unknown
 -- The CXX compiler identification is unknown
 CMake Error at CMakeLists.txt:27 (project):
-  No CMAKE_C_COMPILER could be found.
+  No CMAKE_CXX_COMPILER could be found.
 ```
 
 **Analysis**: 
@@ -156,7 +155,6 @@ CMake Error at CMakeLists.txt:27 (project):
 
    You should now see:
    ```
-   -- The C compiler identification is MSVC 19.xx.xxxxx
    -- The CXX compiler identification is MSVC 19.xx.xxxxx
    -- Configuring done
    -- Generating done
@@ -269,11 +267,7 @@ If you continue having issues:
 
 You'll know it's working when you see:
 ```
--- The C compiler identification is MSVC 19.xx.xxxxx
 -- The CXX compiler identification is MSVC 19.xx.xxxxx
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: ...\cl.exe - skipped
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
 -- Check for working CXX compiler: ...\cl.exe - skipped
