@@ -6,11 +6,15 @@ REM This script automatically sets up your development environment including:
 REM - CMake (if not found)
 REM - Git submodules
 REM - Directory structure
+REM
+REM If you encounter issues, see TROUBLESHOOTING.md or WINDOWS_TROUBLESHOOTING.md
 REM ============================================================================
 
 echo ========================================
 echo GameEngine - Automated Setup
 echo ========================================
+echo.
+echo WARNING: Having issues? See TROUBLESHOOTING.md for help
 echo.
 
 REM Check if running as administrator (needed for some installations)
@@ -257,6 +261,8 @@ echo Next steps:
 echo   1. Run: build.bat (to compile the engine)
 echo   2. Run: run.bat (to start the game engine)
 echo.
-echo If you installed CMake to tools\cmake\, the build script will use it automatically.
+echo If you encounter build issues, see:
+echo   - TROUBLESHOOTING.md for cross-platform issues
+echo   - WINDOWS_TROUBLESHOOTING.md for Windows-specific problems
 echo.
 pause

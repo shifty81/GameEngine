@@ -19,6 +19,11 @@ A professional-grade 3D game engine built with C++ and OpenGL, featuring procedu
 
 Want to modify the code or contribute? See [Building the Engine](#building-the-engine) section below.
 
+**⚠️ Need Help?** If you encounter any issues during setup or building:
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive troubleshooting guide for all platforms
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific detailed solutions
+- **[VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)** - Step-by-step Visual Studio installation guide
+
 ---
 
 ## 🎮 Complete Engine Systems
@@ -107,13 +112,18 @@ This engine now includes **all essential game engine systems** for production-re
 
 ### Prerequisites
 
+**⚠️ IMPORTANT:** If you encounter any issues during installation, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive troubleshooting guidance.
+
 #### Windows
 - CMake 3.20 or higher
 - **Visual Studio Community 2022 (version 17.8 or newer, including 17.14.x)** or Visual Studio 2019 (version 16.11 or newer)
   - **Tested versions:** Visual Studio 2022 v17.8 through v17.14
   - Must include **"Desktop development with C++"** workload for C++20 support
   - See [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md) for detailed installation guide with visual instructions
+  - **Having trouble?** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for Windows-specific issues
 - Git
+
+**💡 TIP:** Run `setup.bat` for automated dependency checking and installation assistance.
 
 #### Linux
 ```bash
@@ -127,6 +137,8 @@ Note: Requires GCC 10+ or Clang 11+ for C++20 support
 ./setup.sh
 ```
 This script will automatically check and install all required dependencies.
+
+**💡 TIP:** If you encounter compiler or dependency issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for Linux-specific solutions.
 
 #### macOS
 ```bash
@@ -144,11 +156,15 @@ Note: Requires Xcode 12+ for C++20 support
 ```
 This script will automatically check and install all required dependencies.
 
+**💡 TIP:** If you encounter "invalid active developer path" or compiler errors, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for macOS-specific solutions.
+
 ### Build Instructions
 
 #### Windows (Visual Studio)
 
 ##### Prerequisites Verification
+
+**⚠️ BEFORE YOU START:** Make sure you have all prerequisites installed. If anything is missing, refer to [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for installation help.
 
 Before building, ensure you have the following installed:
 
@@ -189,6 +205,8 @@ cd GameEngine
 ```bash
 git submodule update --init --recursive
 ```
+
+**⚠️ Troubleshooting:** If you get "Could not find GLFW/GLM/Assimp" errors later, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md#error-could-not-find-glfw-or-could-not-find-glm-or-could-not-find-assimp).
 
 ##### Step 2: Create Build Directory
 
@@ -239,6 +257,8 @@ cmake -G "Visual Studio 16 2019" ..
 # For Visual Studio 2017:
 cmake -G "Visual Studio 15 2017" -A x64 ..
 ```
+
+**⚠️ If you see "No CMAKE_CXX_COMPILER could be found":** This is the most common error! It means Visual Studio is installed but the C++ compiler is not. See the [Troubleshooting section](#troubleshooting) below or [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for the complete fix.
 
 ##### Step 4: Build the Project
 
@@ -351,6 +371,10 @@ run.bat
 
 ##### Troubleshooting
 
+**⚠️ IMPORTANT:** For comprehensive troubleshooting guidance, see:
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Cross-platform troubleshooting guide
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific issues and solutions
+
 **Problem**: "No CMAKE_CXX_COMPILER could be found" or "The CXX compiler identification is unknown"
 - **Cause**: Visual Studio is installed but the C++ compiler (MSVC) is not installed
 - **Quick Fix**: Run the automated compiler detection tool:
@@ -377,6 +401,7 @@ run.bat
 
 **Problem**: "CMake is not recognized as an internal or external command"
 - **Cause**: CMake is not in your system PATH, or is installed in a custom location
+- **Quick Fix**: See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#error-cmake-is-not-recognized-as-an-internal-or-external-command) for detailed solutions
 - **Solution Option 1 - Reinstall CMake with PATH**:
   1. Reinstall CMake from https://cmake.org/download/
   2. During installation, select **"Add CMake to the system PATH for all users"** or **"Add CMake to the system PATH for the current user"**
@@ -409,11 +434,13 @@ run.bat
   - Provide specific fix instructions with component names
   - Optionally auto-launch Visual Studio Installer to fix issues
 - **Manual Solution**: Install Visual Studio with "Desktop development with C++" workload, or specify generator with `-G` flag
+- **Detailed Guide**: See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md#error-no-cmake_cxx_compiler-could-be-found-or-the-cxx-compiler-identification-is-unknown) for complete troubleshooting steps
 
 **For more details on the compiler detection tool**, see [tools/README.md](tools/README.md)
 
 **Problem**: "LINK : fatal error LNK1104: cannot open file 'opengl32.lib'"
 - **Solution**: Windows SDK is missing. Reinstall Visual Studio and ensure Windows SDK is selected in the installer
+- **Detailed Steps**: See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#error-link--fatal-error-lnk1104-cannot-open-file-opengl32lib)
 
 **Problem**: Build fails with "Cannot find GLFW" or "Cannot find GLM"
 - **Solution**: Submodules were not initialized. Run:
@@ -421,6 +448,7 @@ run.bat
   git submodule update --init --recursive
   ```
   Then delete `build` directory and start over from Step 2
+- **More Info**: See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#error-could-not-find-glfw-or-could-not-find-glm-or-could-not-find-assimp)
 
 **Problem**: "GameEngine.exe - System Error: The code execution cannot proceed because VCRUNTIME140.dll was not found"
 - **Solution**: Install Microsoft Visual C++ Redistributable:
@@ -505,7 +533,12 @@ Or use autofix to automatically install missing dependencies:
 ./tools/check-compiler.sh -autofix
 ```
 
-See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive troubleshooting guidance.
+**💡 For detailed troubleshooting help**, see:
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive troubleshooting for all platforms (Linux, macOS, Windows)
+  - Compiler errors and fixes
+  - Missing dependencies
+  - Build failures
+  - Common platform-specific issues
 
 ## Controls
 
