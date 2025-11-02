@@ -417,9 +417,4 @@ inline bool API::VerifyPurchase(const std::string& game_id) {
 
 } // namespace ItchIO
 
-// ============================================================================
-// Convenience typedef for easier usage
-// ============================================================================
-using ItchIO = ItchIO::API;
-
 #endif // ITCHIO_H

@@ -20,7 +20,7 @@ Include the ItchIO header in your game code:
 
 int main() {
     // Create ItchIO API instance
-    ItchIO itchio;
+    ItchIO::API itchio;
     
     // Check if running from itch.io app
     if (itchio.IsAvailable()) {
@@ -49,7 +49,7 @@ int main() {
 To check if a user legitimately owns your game:
 
 ```cpp
-ItchIO itchio;
+ItchIO::API itchio;
 
 if (itchio.IsAvailable() && itchio.Initialize()) {
     // Replace "12345" with your actual game ID from itch.io
@@ -68,7 +68,7 @@ if (itchio.IsAvailable() && itchio.Initialize()) {
 Use profile information to customize the game:
 
 ```cpp
-ItchIO itchio;
+ItchIO::API itchio;
 
 if (itchio.IsAvailable() && itchio.Initialize()) {
     auto profile = itchio.GetUserProfile();
@@ -184,7 +184,7 @@ public:
 
 // Use custom HTTP client
 auto http_client = std::make_unique<CurlHTTPClient>();
-ItchIO itchio(std::move(http_client));
+ItchIO::API itchio(std::move(http_client));
 ```
 
 ### Cloud Save Integration
@@ -192,7 +192,7 @@ ItchIO itchio(std::move(http_client));
 The ItchIO integration provides user authentication, which you can use with your own backend:
 
 ```cpp
-ItchIO itchio;
+ItchIO::API itchio;
 
 if (itchio.Initialize()) {
     auto profile = itchio.GetUserProfile();
@@ -247,7 +247,7 @@ public:
 };
 
 // Usage
-ItchIO itchio;
+ItchIO::API itchio;
 if (itchio.Initialize()) {
     AchievementSystem achievements(itchio, "https://your-backend.com");
     
@@ -310,7 +310,7 @@ struct UserProfile {
 Always check if itch.io is available and handle both cases:
 
 ```cpp
-ItchIO itchio;
+ItchIO::API itchio;
 
 if (itchio.IsAvailable() && itchio.Initialize()) {
     // Online/itch.io features
@@ -330,7 +330,7 @@ Initialize itch.io asynchronously so it doesn't delay game startup:
 ```cpp
 void initializeItchIO() {
     std::thread([]{
-        ItchIO itchio;
+        ItchIO::API itchio;
         if (itchio.Initialize()) {
             // Enable features after initialization
             Game::instance->enableItchIOFeatures();
@@ -348,7 +348,7 @@ class GameState {
     std::shared_ptr<ItchIO::UserProfile> userProfile;
     
     void loadUser() {
-        ItchIO itchio;
+        ItchIO::API itchio;
         if (itchio.Initialize()) {
             userProfile = itchio.GetUserProfile();
             // Don't call GetUserProfile() repeatedly
@@ -362,7 +362,7 @@ class GameState {
 Always check return values and handle errors:
 
 ```cpp
-ItchIO itchio;
+ItchIO::API itchio;
 
 if (!itchio.IsAvailable()) {
     std::cout << "Note: Running without itch.io integration" << std::endl;

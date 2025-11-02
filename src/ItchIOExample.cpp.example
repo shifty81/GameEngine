@@ -23,7 +23,7 @@
  */
 class ExampleGame {
 private:
-    std::unique_ptr<ItchIO> itchio_;
+    std::unique_ptr<ItchIO::API> itchio_;
     std::shared_ptr<ItchIO::UserProfile> current_user_;
     bool is_premium_version_ = false;
     
@@ -37,7 +37,7 @@ public:
         std::cout << "========================================\n" << std::endl;
         
         // Create itch.io API instance
-        itchio_ = std::make_unique<ItchIO>();
+        itchio_ = std::make_unique<ItchIO::API>();
         
         // Check if itch.io integration is available
         if (!itchio_->IsAvailable()) {
@@ -220,7 +220,7 @@ public:
  * @brief Example function showing cloud save integration
  */
 void ExampleCloudSaveIntegration() {
-    ItchIO itchio;
+    ItchIO::API itchio;
     
     if (itchio.Initialize()) {
         auto profile = itchio.GetUserProfile();
@@ -244,7 +244,7 @@ void ExampleCloudSaveIntegration() {
  * @brief Example function showing achievement system
  */
 void ExampleAchievementSystem() {
-    ItchIO itchio;
+    ItchIO::API itchio;
     
     if (itchio.Initialize()) {
         auto profile = itchio.GetUserProfile();

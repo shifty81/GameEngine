@@ -492,7 +492,7 @@ Seamlessly integrate your game with the itch.io platform:
 
 int main() {
     // Initialize itch.io integration
-    ItchIO itchio;
+    ItchIO::API itchio;
     
     if (itchio.IsAvailable() && itchio.Initialize()) {
         // Get user profile
