@@ -144,7 +144,7 @@ cd build
 REM Generate Visual Studio project
 echo.
 echo Generating Visual Studio project...
-cmake ..
+cmake -G "Visual Studio 17 2022" -A x64 ..
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo ======================================================================
