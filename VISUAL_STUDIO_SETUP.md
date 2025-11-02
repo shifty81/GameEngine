@@ -9,6 +9,10 @@ This guide provides **specific version numbers** and **detailed visual instructi
 - [Verification Steps](#verification-steps)
 - [Troubleshooting](#troubleshooting)
 
+**⚠️ Having installation issues?** See the [Troubleshooting](#troubleshooting) section at the end of this guide, or refer to:
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Cross-platform troubleshooting
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific detailed solutions
+
 ---
 
 ## Version Requirements
@@ -109,6 +113,8 @@ This guide provides **specific version numbers** and **detailed visual instructi
 ### Step 3: Select Workloads
 
 **This is the MOST IMPORTANT step!** You must select the correct workload.
+
+**⚠️ If you skip this step or don't select the C++ workload, the build will fail!** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) if you encounter "No CMAKE_CXX_COMPILER could be found" errors later.
 
 1. **Click the "Install" button** (for new installation)
    - Or click "Modify" if Visual Studio is already installed
@@ -287,6 +293,11 @@ After installation completes, verify the C++ compiler is installed:
 
 **✓ SUCCESS!** If you see this output, your Visual Studio installation is correct and ready to build the GameEngine!
 
+**⚠️ If you see errors instead**, refer to:
+- The [Troubleshooting](#troubleshooting) section below
+- [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for detailed error resolution
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for cross-platform issues
+
 ---
 
 ## Visual Studio 2019 Installation (Alternative)
@@ -404,6 +415,10 @@ Visual Studio 2022 Compiler Detection
 
 ## Troubleshooting
 
+**⚠️ For comprehensive troubleshooting**, see:
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Detailed Windows-specific troubleshooting with step-by-step solutions
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Cross-platform troubleshooting guide
+
 ### Issue: "No CMAKE_CXX_COMPILER could be found"
 
 **Cause:** Visual Studio is installed but the C++ workload is not.
@@ -452,6 +467,8 @@ Visual Studio 2022 Compiler Detection
    build.bat
    ```
 
+**💡 For detailed step-by-step instructions with screenshots**, see [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md#error-no-cmake_cxx_compiler-could-be-found-or-the-cxx-compiler-identification-is-unknown).
+
 ### Issue: Wrong Visual Studio Version Detected
 
 **Scenario:** You have multiple Visual Studio versions installed.
@@ -475,6 +492,8 @@ If some components are missing, add them via Visual Studio Installer:
    - ☑ Windows 11 SDK (10.0.22621.0) or Windows 10 SDK
    - ☑ C++ CMake tools for Windows
 5. Click "Modify" to install
+
+**💡 Need more help?** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for detailed troubleshooting steps.
 
 ---
 
@@ -547,10 +566,11 @@ Look for "Version 19.xx.xxxxx" in the output:
 
 ## Need More Help?
 
-- **Troubleshooting Guide:** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)
-- **Quick Start:** See [QUICKSTART.md](QUICKSTART.md)
-- **Main Documentation:** See [README.md](README.md)
-- **Compiler Detection:** Run `tools\check-vs2022-compiler.bat`
+- **Troubleshooting Guide:** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for comprehensive Windows troubleshooting
+- **Cross-platform Issues:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for general build issues
+- **Quick Start:** See [QUICKSTART.md](QUICKSTART.md) for a streamlined setup guide
+- **Main Documentation:** See [README.md](README.md) for full documentation
+- **Compiler Detection:** Run `tools\check-vs2022-compiler.bat` for automated diagnostics
 
 **Still having issues?** Open an issue on GitHub with:
 1. Your Visual Studio version (from Visual Studio Installer)

@@ -25,6 +25,8 @@ Follow the steps below to set up your development environment and build the engi
 
 ## Step 1: Prerequisites
 
+**⚠️ Having installation issues?** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for solutions to common problems.
+
 ### Install Required Software
 
 1. **Git for Windows**
@@ -35,6 +37,7 @@ Follow the steps below to set up your development environment and build the engi
    - Download from: https://cmake.org/download/
    - Choose "Windows x64 Installer"
    - During installation, select "Add CMake to system PATH"
+   - **💡 TIP:** Run `setup.bat` instead to automatically download portable CMake if needed
 
 3. **Visual Studio 2022 or 2019** (Community Edition is free)
    - **Recommended:** Visual Studio Community 2022 (version 17.8 or newer, including 17.14.x)
@@ -43,8 +46,11 @@ Follow the steps below to set up your development environment and build the engi
    - Download from: https://visualstudio.microsoft.com/downloads/
    - During installation, select "Desktop development with C++"
    - **📖 For detailed installation with visual instructions, see [VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)**
+   - **⚠️ Installation problems?** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for help
 
 ## Step 2: Clone and Build
+
+**⚠️ Before proceeding:** If you encounter any errors, refer to [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for solutions.
 
 1. Open Command Prompt or PowerShell
 
@@ -63,6 +69,11 @@ Follow the steps below to set up your development environment and build the engi
    - Configure the project
    - Compile the engine
    - Create the executable
+   
+   **⚠️ Build failed?** Check the error message and refer to:
+   - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for general build issues
+   - [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md) for Windows-specific problems
+   - The [Troubleshooting](#troubleshooting) section below for quick fixes
 
 ## Step 3: Run the Engine
 
@@ -101,6 +112,11 @@ The game engine window will open with a procedurally generated 3D world!
 
 ## Troubleshooting
 
+**⚠️ For comprehensive troubleshooting**, see:
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Complete troubleshooting guide for all platforms
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific detailed solutions
+- **[README.md](README.md)** - Full documentation with advanced troubleshooting
+
 ### "No CMAKE_C_COMPILER could be found" or "No CMAKE_CXX_COMPILER could be found"
 
 This is the most common error! It means Visual Studio is installed but the C++ compiler is not.
@@ -119,19 +135,25 @@ This is the most common error! It means Visual Studio is installed but the C++ c
 
 **Why this happens:** CMake found Visual Studio but the actual C++ compiler tools (cl.exe, MSBuild, Windows SDK) aren't installed. The "Desktop development with C++" workload includes everything needed.
 
+**💡 For step-by-step instructions with screenshots**, see [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md#error-no-cmake_cxx_compiler-could-be-found-or-the-cxx-compiler-identification-is-unknown).
+
 ### "CMake is not installed"
 - Make sure CMake is installed and added to PATH
 - Restart your command prompt after installation
 - Download from: https://cmake.org/download/
+- **OR** run `setup.bat` to automatically download portable CMake
+- **💡 More help:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#error-cmake-is-not-recognized-as-an-internal-or-external-command)
 
 ### "Visual Studio not found"
 - Install Visual Studio with C++ desktop development workload
 - Or use MinGW: `cmake -G "MinGW Makefiles" ..` in the build directory
+- **💡 Detailed fix:** See [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md#error-no-cmake_cxx_compiler-could-be-found-or-the-cxx-compiler-identification-is-unknown)
 
 ### "GameEngine.exe not found"
 - Make sure build.bat completed successfully
 - Check for error messages in the build output
 - Check README.md Troubleshooting section for detailed solutions
+- **💡 Complete guide:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for all build-related issues
 
 ### Performance Issues
 - The engine is optimized, but large terrains may need a good GPU
@@ -141,6 +163,7 @@ This is the most common error! It means Visual Studio is installed but the C++ c
 - First build compiles Assimp library (~3000 files) and takes 10-15 minutes
 - This is normal! Subsequent builds are much faster (10-30 seconds)
 - Speed up with: `cmake --build . --config Release -j 8` (uses 8 cores)
+- **💡 More optimization tips:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#error-long-build-time-30-minutes-on-first-build)
 
 ## Customization
 
