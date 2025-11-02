@@ -1,10 +1,10 @@
 #!/bin/bash
 # ============================================================================
-# Cross-Platform C++ Compiler Detection and Fix Script
+# Ubuntu 24.04 C++ Compiler Detection and Fix Script
 # ============================================================================
 # This script detects C++ compiler installation and provides automated fixes
 # when the compiler is not found.
-# Supports: Linux (GCC/Clang), macOS (Xcode Command Line Tools)
+# Optimized for: Ubuntu 24.04 LTS (Noble Numbat)
 # ============================================================================
 
 set -e
@@ -44,9 +44,9 @@ done
 print_header() {
     if [ "$QUIET" = false ]; then
         echo ""
-        echo -e "${CYAN}============================================================================${RESET}"
+        echo -e "${CYAN}════════════════════════════════════════════════════════════════════════${RESET}"
         echo -e "${CYAN} $1${RESET}"
-        echo -e "${CYAN}============================================================================${RESET}"
+        echo -e "${CYAN}════════════════════════════════════════════════════════════════════════${RESET}"
     fi
 }
 
@@ -68,362 +68,187 @@ print_warning() {
 
 print_info() {
     if [ "$QUIET" = false ]; then
-        echo -e "${BLUE}ℹ $1${RESET}"
+        echo -e "${BLUE}  • $1${RESET}"
     fi
 }
 
-# Detect operating system
-detect_os() {
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo "linux"
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "macos"
-    else
-        echo "unknown"
-    fi
-}
+# Track issues
+MISSING_PACKAGES=()
+HAS_ERRORS=false
 
 # ============================================================================
-# Main Detection Logic
-# ============================================================================
-
-print_header "C++ Compiler Detection"
-
-OS=$(detect_os)
-print_info "Operating System: $OS"
-
-if [ "$OS" = "unknown" ]; then
-    print_error "Unsupported operating system: $OSTYPE"
-    exit 1
-fi
-
-# ============================================================================
-# Check for CMake
+# Check CMake
 # ============================================================================
 print_header "Step 1: Checking for CMake"
 
 if command -v cmake &> /dev/null; then
-    CMAKE_VERSION=$(cmake --version | head -n1)
-    print_success "CMake found: $CMAKE_VERSION"
+    CMAKE_VERSION=$(cmake --version | head -n1 | awk '{print $3}')
+    print_success "CMake is installed: version $CMAKE_VERSION"
 else
-    print_error "CMake not found"
+    print_error "CMake is not installed"
+    MISSING_PACKAGES+=("cmake")
+    HAS_ERRORS=true
     
-    if [ "$OS" = "linux" ]; then
-        print_info "Install CMake with: sudo apt-get install cmake"
-        print_info "Or: sudo yum install cmake"
-    elif [ "$OS" = "macos" ]; then
-        print_info "Install CMake with: brew install cmake"
+    if [ "$QUIET" = false ]; then
+        echo ""
+        print_info "Install CMake with:"
+        echo "  sudo apt-get update"
+        echo "  sudo apt-get install -y cmake"
     fi
-    
-    exit 1
 fi
 
 # ============================================================================
-# Check for C++ Compiler (Linux)
+# Check C++ Compiler
 # ============================================================================
-if [ "$OS" = "linux" ]; then
-    print_header "Step 2: Checking for C++ Compiler (Linux)"
-    
-    COMPILER_FOUND=false
-    MISSING_PACKAGES=()
-    
-    # Check for g++
-    if command -v g++ &> /dev/null; then
-        GCC_VERSION=$(g++ --version | head -n1)
-        print_success "g++ found: $GCC_VERSION"
-        COMPILER_FOUND=true
-    else
-        print_error "g++ not found"
-        MISSING_PACKAGES+=("g++")
-    fi
-    
-    # Check for make
-    if command -v make &> /dev/null; then
-        MAKE_VERSION=$(make --version | head -n1)
-        print_success "make found: $MAKE_VERSION"
-    else
-        print_error "make not found"
-        MISSING_PACKAGES+=("make")
-    fi
-    
-    # Check for OpenGL development libraries
-    print_header "Step 3: Checking for Required Development Libraries"
-    
-    # Try ldconfig first, fall back to pkg-config if not available
-    if command -v ldconfig &> /dev/null; then
-        if ldconfig -p 2>/dev/null | grep -q libGL.so; then
-            print_success "OpenGL development libraries found"
-        else
-            print_warning "OpenGL development libraries not found"
-            MISSING_PACKAGES+=("libgl1-mesa-dev")
-        fi
-        
-        if ldconfig -p 2>/dev/null | grep -q libGLU.so; then
-            print_success "GLU development libraries found"
-        else
-            print_warning "GLU development libraries not found"
-            MISSING_PACKAGES+=("libglu1-mesa-dev")
-        fi
-        
-        if ldconfig -p 2>/dev/null | grep -q libX11.so; then
-            print_success "X11 development libraries found"
-        else
-            print_warning "X11 development libraries not found"
-            MISSING_PACKAGES+=("libx11-dev" "libxrandr-dev" "libxinerama-dev" "libxcursor-dev" "libxi-dev")
-        fi
-    elif command -v pkg-config &> /dev/null; then
-        # Fallback to pkg-config for systems without ldconfig
-        if pkg-config --exists gl 2>/dev/null; then
-            print_success "OpenGL development libraries found (via pkg-config)"
-        else
-            print_warning "OpenGL development libraries not found"
-            MISSING_PACKAGES+=("libgl1-mesa-dev")
-        fi
-        
-        if pkg-config --exists glu 2>/dev/null; then
-            print_success "GLU development libraries found (via pkg-config)"
-        else
-            print_warning "GLU development libraries not found"
-            MISSING_PACKAGES+=("libglu1-mesa-dev")
-        fi
-        
-        if pkg-config --exists x11 2>/dev/null; then
-            print_success "X11 development libraries found (via pkg-config)"
-        else
-            print_warning "X11 development libraries not found"
-            MISSING_PACKAGES+=("libx11-dev" "libxrandr-dev" "libxinerama-dev" "libxcursor-dev" "libxi-dev")
-        fi
-    else
-        print_warning "Cannot verify libraries (ldconfig and pkg-config not available)"
-        print_info "Libraries will be checked during CMake configuration"
-    fi
-    
-    # Summary
-    if [ "$COMPILER_FOUND" = true ] && [ ${#MISSING_PACKAGES[@]} -eq 0 ]; then
-        print_header "Detection Summary"
-        echo ""
-        echo -e "${GREEN}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo -e "${GREEN}✓ SUCCESS: C++ compiler and all required libraries are installed!${RESET}"
-        echo -e "${GREEN}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo ""
-        print_info "You can now build the project using build.sh or CMake"
-        exit 0
-    else
-        print_header "Detection Summary"
-        echo ""
-        echo -e "${RED}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo -e "${RED}✗ MISSING COMPONENTS DETECTED${RESET}"
-        echo -e "${RED}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo ""
-        
-        if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
-            echo -e "${YELLOW}The following packages are required but not installed:${RESET}"
-            echo ""
-            for pkg in "${MISSING_PACKAGES[@]}"; do
-                echo "  • $pkg"
-            done
-            echo ""
-        fi
-        
-        print_header "How to Fix"
-        echo ""
-        
-        # Detect package manager
-        if command -v apt-get &> /dev/null; then
-            PKG_MANAGER="apt-get"
-            INSTALL_CMD="sudo apt-get update && sudo apt-get install -y"
-        elif command -v yum &> /dev/null; then
-            PKG_MANAGER="yum"
-            INSTALL_CMD="sudo yum install -y"
-        elif command -v dnf &> /dev/null; then
-            PKG_MANAGER="dnf"
-            INSTALL_CMD="sudo dnf install -y"
-        elif command -v pacman &> /dev/null; then
-            PKG_MANAGER="pacman"
-            INSTALL_CMD="sudo pacman -S"
-        else
-            PKG_MANAGER="unknown"
-        fi
-        
-        if [ "$PKG_MANAGER" = "apt-get" ]; then
-            echo -e "${CYAN}Option 1: Install All Required Packages (Recommended)${RESET}"
-            echo "  For Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian, run:"
-            echo ""
-            echo "  sudo apt-get update"
-            echo "  sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
-            echo ""
-            echo "  Note: Ubuntu 24.04 LTS comes with GCC 13.3 which has excellent C++20 support!"
-            echo ""
-            
-            if [ "$AUTO_FIX" = true ]; then
-                echo ""
-                echo -e "${CYAN}AutoFix Mode: Installing packages...${RESET}"
-                echo ""
-                echo -e "${YELLOW}The following command will be executed:${RESET}"
-                echo "  sudo apt-get update"
-                echo "  sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
-                echo ""
-                read -p "Continue with installation? (y/n) " -n 1 -r
-                echo ""
-                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                    print_info "Installation cancelled"
-                    exit 1
-                fi
-                
-                sudo apt-get update
-                sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
-                
-                if [ $? -eq 0 ]; then
-                    echo ""
-                    print_success "Packages installed successfully!"
-                    print_info "You can now build the project"
-                    exit 0
-                else
-                    print_error "Failed to install packages"
-                    exit 1
-                fi
-            fi
-        elif [ "$PKG_MANAGER" = "yum" ] || [ "$PKG_MANAGER" = "dnf" ]; then
-            echo -e "${CYAN}Option 1: Install All Required Packages (Recommended)${RESET}"
-            echo "  Run this command:"
-            echo ""
-            echo "  $INSTALL_CMD gcc-c++ cmake mesa-libGL-devel mesa-libGLU-devel libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
-            echo ""
-            
-            if [ "$AUTO_FIX" = true ]; then
-                echo ""
-                echo -e "${CYAN}AutoFix Mode: Installing packages...${RESET}"
-                echo ""
-                echo -e "${YELLOW}The following command will be executed:${RESET}"
-                echo "  $INSTALL_CMD gcc-c++ cmake mesa-libGL-devel mesa-libGLU-devel libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
-                echo ""
-                read -p "Continue with installation? (y/n) " -n 1 -r
-                echo ""
-                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                    print_info "Installation cancelled"
-                    exit 1
-                fi
-                
-                $INSTALL_CMD gcc-c++ cmake mesa-libGL-devel mesa-libGLU-devel libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel
-                
-                if [ $? -eq 0 ]; then
-                    echo ""
-                    print_success "Packages installed successfully!"
-                    print_info "You can now build the project"
-                    exit 0
-                else
-                    print_error "Failed to install packages"
-                    exit 1
-                fi
-            fi
-        else
-            echo -e "${CYAN}Install Required Packages${RESET}"
-            echo "  Please install the following packages using your system's package manager:"
-            echo "  - build-essential or gcc-c++"
-            echo "  - cmake"
-            echo "  - OpenGL development libraries"
-            echo "  - X11 development libraries"
-            echo ""
-        fi
-        
-        echo -e "${CYAN}Or run this script with -autofix flag to install automatically:${RESET}"
-        echo "  ./tools/check-compiler.sh -autofix"
-        echo ""
-        
-        exit 1
-    fi
+print_header "Step 2: Checking for C++ Compiler (GCC)"
 
-# ============================================================================
-# Check for C++ Compiler (macOS)
-# ============================================================================
-elif [ "$OS" = "macos" ]; then
-    print_header "Step 2: Checking for C++ Compiler (macOS)"
+if command -v g++ &> /dev/null; then
+    GCC_VERSION=$(g++ --version | head -n1 | awk '{print $3}')
+    print_success "GCC is installed: version $GCC_VERSION"
     
-    COMPILER_FOUND=false
-    
-    # Check for clang
-    if command -v clang++ &> /dev/null; then
-        CLANG_VERSION=$(clang++ --version | head -n1)
-        print_success "clang++ found: $CLANG_VERSION"
-        COMPILER_FOUND=true
+    # Check if it's GCC 13.3+ for best C++20 support
+    MAJOR=$(echo $GCC_VERSION | cut -d. -f1)
+    if [ "$MAJOR" -ge 13 ]; then
+        print_success "GCC version is 13+ (excellent C++20 support)"
+    elif [ "$MAJOR" -ge 10 ]; then
+        print_warning "GCC version is $MAJOR (good C++20 support, but 13+ recommended for Ubuntu 24.04)"
     else
-        print_error "clang++ not found"
+        print_warning "GCC version is $MAJOR (may have limited C++20 support, recommend upgrading)"
     fi
+else
+    print_error "GCC (g++) is not installed"
+    MISSING_PACKAGES+=("build-essential")
+    HAS_ERRORS=true
     
-    # Check for Xcode Command Line Tools
-    if xcode-select -p &> /dev/null; then
-        XCODE_PATH=$(xcode-select -p)
-        print_success "Xcode Command Line Tools found: $XCODE_PATH"
-        COMPILER_FOUND=true
-    else
-        print_error "Xcode Command Line Tools not found"
-    fi
-    
-    # Summary
-    if [ "$COMPILER_FOUND" = true ]; then
-        print_header "Detection Summary"
+    if [ "$QUIET" = false ]; then
         echo ""
-        echo -e "${GREEN}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo -e "${GREEN}✓ SUCCESS: C++ compiler is properly installed!${RESET}"
-        echo -e "${GREEN}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo ""
-        print_info "You can now build the project using build.sh or CMake"
-        exit 0
-    else
-        print_header "Detection Summary"
-        echo ""
-        echo -e "${RED}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo -e "${RED}✗ MISSING COMPONENTS DETECTED${RESET}"
-        echo -e "${RED}════════════════════════════════════════════════════════════════════════${RESET}"
-        echo ""
-        echo -e "${YELLOW}Xcode Command Line Tools are required but not installed.${RESET}"
-        echo ""
-        
-        print_header "How to Fix"
-        echo ""
-        echo -e "${CYAN}Option 1: Install Xcode Command Line Tools (Recommended)${RESET}"
-        echo "  Run this command:"
-        echo ""
-        echo "  xcode-select --install"
-        echo ""
-        echo "  This will open a dialog to install the command line tools."
-        echo "  Follow the prompts to complete the installation."
-        echo ""
-        
-        if [ "$AUTO_FIX" = true ]; then
-            echo ""
-            echo -e "${CYAN}AutoFix Mode: Launching Xcode Command Line Tools installer...${RESET}"
-            echo ""
-            xcode-select --install 2>&1
-            
-            EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 0 ]; then
-                echo ""
-                print_info "Please complete the installation in the dialog that appeared."
-                print_info "After installation is complete, run this script again to verify."
-            elif [ $EXIT_CODE -eq 1 ]; then
-                # Exit code 1 usually means already installed
-                print_warning "Command Line Tools may already be installed but corrupted"
-                print_info "Try reinstalling with these steps:"
-                print_info "  1. sudo rm -rf /Library/Developer/CommandLineTools"
-                print_info "  2. xcode-select --install"
-            else
-                print_error "Failed to launch installer (exit code: $EXIT_CODE)"
-            fi
-            exit 1
-        fi
-        
-        echo -e "${CYAN}Option 2: Install Full Xcode (Alternative)${RESET}"
-        echo "  1. Open the App Store"
-        echo "  2. Search for 'Xcode'"
-        echo "  3. Install Xcode"
-        echo "  4. Run: sudo xcodebuild -license accept"
-        echo ""
-        
-        echo -e "${CYAN}Or run this script with -autofix flag to launch the installer:${RESET}"
-        echo "  ./tools/check-compiler.sh -autofix"
-        echo ""
-        
-        exit 1
+        print_info "Install GCC with:"
+        echo "  sudo apt-get update"
+        echo "  sudo apt-get install -y build-essential"
     fi
 fi
+
+# Check for make
+if command -v make &> /dev/null; then
+    print_success "make is installed"
+else
+    print_error "make is not installed"
+    if [[ ! " ${MISSING_PACKAGES[@]} " =~ " build-essential " ]]; then
+        MISSING_PACKAGES+=("build-essential")
+    fi
+    HAS_ERRORS=true
+fi
+
+# ============================================================================
+# Check OpenGL Libraries
+# ============================================================================
+print_header "Step 3: Checking for OpenGL Libraries"
+
+# Check for libGL
+if ldconfig -p | grep -q libGL.so; then
+    print_success "libGL (OpenGL) is installed"
+else
+    print_error "libGL (OpenGL) is not installed"
+    MISSING_PACKAGES+=("libgl1-mesa-dev")
+    HAS_ERRORS=true
+fi
+
+# Check for libGLU
+if ldconfig -p | grep -q libGLU.so; then
+    print_success "libGLU (OpenGL Utility) is installed"
+else
+    print_error "libGLU (OpenGL Utility) is not installed"
+    MISSING_PACKAGES+=("libglu1-mesa-dev")
+    HAS_ERRORS=true
+fi
+
+# ============================================================================
+# Check X11 Libraries (Required for GLFW)
+# ============================================================================
+print_header "Step 4: Checking for X11 Libraries"
+
+X11_LIBS=(
+    "libX11.so:libx11-dev:X11 Core"
+    "libXrandr.so:libxrandr-dev:X11 RandR"
+    "libXinerama.so:libxinerama-dev:X11 Xinerama"
+    "libXcursor.so:libxcursor-dev:X11 Cursor"
+    "libXi.so:libxi-dev:X11 Input"
+)
+
+for lib_info in "${X11_LIBS[@]}"; do
+    IFS=':' read -r lib_file pkg_name lib_name <<< "$lib_info"
+    
+    if ldconfig -p | grep -q "$lib_file"; then
+        print_success "$lib_name is installed"
+    else
+        print_error "$lib_name is not installed"
+        MISSING_PACKAGES+=("$pkg_name")
+        HAS_ERRORS=true
+    fi
+done
+
+# ============================================================================
+# Summary and Fix
+# ============================================================================
+echo ""
+
+if [ "$HAS_ERRORS" = false ]; then
+    print_header "✓ SUCCESS: C++ compiler and all required libraries are installed!"
+    echo ""
+    exit 0
+fi
+
+# There are errors - show summary
+print_header "✗ MISSING COMPONENTS DETECTED"
+echo ""
+
+if [ ${#MISSING_PACKAGES[@]} -gt 0 ]; then
+    echo "The following packages are required but not installed:"
+    echo ""
+    
+    # Remove duplicates and print
+    UNIQUE_PACKAGES=($(printf "%s\n" "${MISSING_PACKAGES[@]}" | sort -u))
+    for pkg in "${UNIQUE_PACKAGES[@]}"; do
+        print_info "$pkg"
+    done
+    
+    echo ""
+    echo ""
+    echo "Option 1: Install All Required Packages (Recommended)"
+    echo "  For Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian, run:"
+    echo ""
+    echo "  sudo apt-get update"
+    echo "  sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
+    echo ""
+    echo "  Note: Ubuntu 24.04 LTS comes with GCC 13.3 which has excellent C++20 support!"
+    echo ""
+    
+    if [ "$AUTO_FIX" = false ]; then
+        echo "Or run this script with -autofix flag to install automatically:"
+        echo "  ./tools/check-compiler.sh -autofix"
+        echo ""
+    fi
+fi
+
+# Auto-fix if requested
+if [ "$AUTO_FIX" = true ]; then
+    echo ""
+    print_header "AUTO-FIX: Installing missing packages"
+    echo ""
+    
+    echo "Running: sudo apt-get update"
+    sudo apt-get update
+    
+    echo ""
+    echo "Running: sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
+    sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+    
+    echo ""
+    print_success "All missing packages have been installed!"
+    echo ""
+    echo "You can now build the engine with: ./build.sh"
+    echo ""
+    exit 0
+fi
+
+exit 1
