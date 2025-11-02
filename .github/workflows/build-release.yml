@@ -149,19 +149,36 @@ jobs:
           
           # Copy MinGW runtime DLLs (required for distribution)
           $mingwPath = (Get-Command g++).Source | Split-Path
-          if (-not (Test-Path "$mingwPath\libgcc_s_seh-1.dll")) {
-            Write-Error "Required MinGW runtime DLLs not found at: $mingwPath"
-            exit 1
-          }
-          copy "$mingwPath\libgcc_s_seh-1.dll" GameEngine-Windows-MinGW\
-          copy "$mingwPath\libstdc++-6.dll" GameEngine-Windows-MinGW\
-          copy "$mingwPath\libwinpthread-1.dll" GameEngine-Windows-MinGW\
           
-          # Verify DLLs were copied
-          if (-not (Test-Path "GameEngine-Windows-MinGW\libgcc_s_seh-1.dll")) {
-            Write-Error "Failed to copy MinGW runtime DLLs"
+          # Check for required MinGW runtime DLLs
+          $requiredDlls = @('libgcc_s_seh-1.dll', 'libstdc++-6.dll', 'libwinpthread-1.dll')
+          $missingDlls = @()
+          
+          foreach ($dll in $requiredDlls) {
+            $dllPath = Join-Path $mingwPath $dll
+            if (Test-Path $dllPath) {
+              copy $dllPath GameEngine-Windows-MinGW\
+              Write-Host "✓ Copied $dll"
+            } else {
+              $missingDlls += $dll
+              Write-Warning "× Missing $dll at $dllPath"
+            }
+          }
+          
+          # Fail if any critical DLLs are missing
+          if ($missingDlls.Count -gt 0) {
+            Write-Error "Failed to find required MinGW runtime DLLs: $($missingDlls -join ', ')"
+            Write-Error "These DLLs are required for the executable to run on systems without MinGW installed"
             exit 1
           }
+          
+          # Verify at least one critical DLL was copied successfully
+          if (-not (Test-Path "GameEngine-Windows-MinGW\libgcc_s_seh-1.dll")) {
+            Write-Error "Critical runtime DLL verification failed"
+            exit 1
+          }
+          
+          Write-Host "✓ All MinGW runtime DLLs copied successfully"
           
           # Copy assets
           xcopy /E /I /Y assets GameEngine-Windows-MinGW\assets

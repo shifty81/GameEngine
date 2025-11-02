@@ -256,7 +256,7 @@ if %errorLevel% neq 0 (
     echo.
     echo Please review the error messages above.
     echo.
-    echo For troubleshooting help, see TROUBLESHOOTING.md
+    echo For troubleshooting help, see BUILD_WITHOUT_VS.md
     echo.
     cd ..
     pause

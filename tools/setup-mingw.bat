@@ -32,7 +32,6 @@ set MINGW_EXCEPTION=seh
 REM MinGW-w64 download URL (using winlibs.com builds - latest stable GCC)
 set MINGW_URL=https://github.com/brechtsanders/winlibs_mingw/releases/download/%MINGW_RELEASE%/winlibs-%MINGW_ARCH%-%MINGW_THREADS%-%MINGW_EXCEPTION%-gcc-%MINGW_VERSION%-mingw-w64ucrt-11.0.0-r1.zip
 set MINGW_ARCHIVE=mingw64.zip
-set MINGW_SHA256=
 
 REM ============================================================================
 REM Step 1: Check if MinGW is already installed
@@ -106,9 +105,14 @@ REM Create external directory if it doesn't exist
 if not exist "%~dp0..\external" mkdir "%~dp0..\external"
 
 REM Download using PowerShell
-echo Downloading...
-REM NOTE: For security, consider adding SHA256 checksum verification in production
-REM Example: After download, verify hash matches expected value before extraction
+echo Downloading from trusted source (GitHub/winlibs)...
+echo.
+REM SECURITY NOTE: This script downloads from GitHub (winlibs.com builds).
+REM For enhanced security in production environments, consider:
+REM   1. Verifying SHA256 checksum after download
+REM   2. Using a local mirror/cache of the installer
+REM   3. Scanning with antivirus before extraction
+REM The winlibs.com MinGW-w64 builds are widely used and community-trusted.
 powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri '%MINGW_URL%' -OutFile '%~dp0..\external\%MINGW_ARCHIVE%' -UseBasicParsing}"
 
 if %errorLevel% neq 0 (
