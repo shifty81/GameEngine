@@ -47,6 +47,12 @@ This engine now includes **all essential game engine systems** for production-re
 - 🔍 **OpenGL Debugger** - Automatic OpenGL error detection and logging
 - ⏱️ **High-Precision Timers** - Performance measurement tools
 
+### 🎯 Asset Integration
+- 🎨 **itch.io Asset Support** - Easy integration of downloaded assets from itch.io marketplace
+- 📦 **Multiple Format Support** - FBX, OBJ, GLTF, and more from any asset store
+- 🗂️ **Smart Asset Organization** - Automatic caching and management
+- 🔄 **Quick Drop-in** - Simple 3-step process to use marketplace assets
+
 ### ⚠️ Integration-Ready Systems
 - ⚛️ **Physics Framework** - AABB collision, rigid bodies (integrate Bullet/PhysX)
 - 🔊 **Audio Framework** - 3D spatial audio system (integrate OpenAL/FMOD)
@@ -429,6 +435,7 @@ GameEngine/
 ├── README.md                     # This file
 ├── ENGINE_SYSTEMS.md             # ✨ NEW - Complete systems documentation
 ├── ASSET_PIPELINE.md             # Asset integration guide
+├── ITCHIO_ASSETS.md              # ✨ NEW - itch.io asset integration guide
 └── QUICKSTART.md                 # Quick start guide
 ```
 
@@ -445,6 +452,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
+- **[ITCHIO_ASSETS.md](ITCHIO_ASSETS.md)** - Easy itch.io asset integration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners
 - **[ASSET_PIPELINE.md](ASSET_PIPELINE.md)** - 3D asset integration guide
 - **[FEATURES.md](FEATURES.md)** - Detailed feature list
@@ -472,6 +480,42 @@ treeModel->Draw(shader);
 ```
 
 See **ASSET_PIPELINE.md** for complete integration guide.
+
+### Integrating itch.io Assets
+
+Easily drop in assets downloaded from itch.io:
+
+**Step 1:** Download asset pack from [itch.io](https://itch.io/game-assets)
+
+**Step 2:** Extract and copy to your project:
+```bash
+# Copy models to assets folder
+cp downloaded_pack/models/* GameEngine/assets/models/
+
+# Copy textures
+cp downloaded_pack/textures/* GameEngine/assets/textures/
+```
+
+**Step 3:** Load and use in your game:
+```cpp
+// Load the itch.io assets
+auto model = AssetManager::GetInstance()->LoadModel(
+    "assets/models/tree.fbx", 
+    "tree"
+);
+
+// Render in game loop
+shader.use();
+shader.setMat4("model", transform);
+model->Draw(shader);
+```
+
+See **ITCHIO_ASSETS.md** for complete guide including:
+- Organizing large asset collections
+- Fixing coordinate system mismatches
+- Handling scale issues
+- Performance optimization
+- Recommended asset packs
 
 ### Adding New Features
 The engine is designed to be easily extensible:
