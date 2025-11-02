@@ -1,30 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 
 # =============================================================================
-# IMPORTANT: If you get "No CMAKE_CXX_COMPILER could be found" errors:
+# Ubuntu 24.04 LTS Game Engine Build Configuration
 #
-# Windows Users:
-#   You need to install Visual Studio with the "Desktop development with C++" 
-#   workload. This installs the MSVC compiler (cl.exe).
-#   
-#   Supported Versions:
-#   - Visual Studio 2022 (v17.8 through v17.14 and newer) - Recommended
-#   - Visual Studio 2019 (v16.11 and newer) - Alternative
-#   
-#   Steps to fix:
-#   1. Download Visual Studio Community (free):
-#      https://visualstudio.microsoft.com/downloads/
-#   2. Run the installer
-#   3. Select "Desktop development with C++" workload
-#   4. Click Install/Modify
-#   5. After installation, delete the 'build' folder
-#   6. Run 'build.bat' again
+# Prerequisites:
+#   sudo apt-get install build-essential cmake libgl1-mesa-dev libglu1-mesa-dev \
+#       libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 #
-# Linux Users:
-#   sudo apt-get install build-essential cmake libgl1-mesa-dev
-#
-# macOS Users:
-#   xcode-select --install
+# Quick Start:
+#   ./setup.sh
+#   ./build.sh
+#   ./run.sh
 # =============================================================================
 
 project(GameEngine VERSION 1.0.0 LANGUAGES CXX)
@@ -106,12 +92,9 @@ target_link_libraries(${PROJECT_NAME}
     stb_image
 )
 
-# Windows-specific settings
-if(WIN32)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        WIN32_EXECUTABLE OFF
-    )
+# Linux-specific settings for Ubuntu 24.04
+if(UNIX AND NOT APPLE)
+    # Enable threading support
+    find_package(Threads REQUIRED)
+    target_link_libraries(${PROJECT_NAME} Threads::Threads)
 endif()
-
-# Set startup project for Visual Studio
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
