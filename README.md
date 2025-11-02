@@ -686,7 +686,12 @@ GameEngine/
 │   ├── UISystem.h                # ✨ NEW - In-game UI system
 │   ├── SceneGraph.h              # ✨ NEW - Scene/Entity management
 │   ├── DebugTools.h              # ✨ NEW - Profiling and debug rendering
-│   └── DebugConsole.h            # ✨ NEW - Runtime debug console system
+│   ├── DebugConsole.h            # ✨ NEW - Runtime debug console system
+│   └── ScriptCompiler.h          # ✨ NEW - Custom script compiler system
+├── scripts/                       # ✨ NEW - Script files directory
+│   ├── startup.script            # Auto-executed startup script
+│   ├── demo.script               # Example demonstration script
+│   └── README.md                 # Script documentation
 ├── assets/
 │   ├── models/                   # 3D model files (.obj, .fbx, .gltf)
 │   └── textures/                 # Texture files (.png, .jpg, .tga)
@@ -697,7 +702,10 @@ GameEngine/
 │   ├── assimp/                   # 3D model loading library (v6.0.2)
 │   └── stb/                      # Image loading library
 ├── CMakeLists.txt                # Build configuration
+├── OneClickBuild.bat             # ✨ NEW - One-click Windows build installer
 ├── README.md                     # This file
+├── SCRIPT_COMPILER.md            # ✨ NEW - Script compiler documentation
+├── ONECLICK_BUILD.md             # ✨ NEW - One-click build guide
 ├── ENGINE_SYSTEMS.md             # ✨ NEW - Complete systems documentation
 ├── VERSION_UPDATES.md            # ✨ NEW - Architecture updates and modernization
 ├── ASSET_PIPELINE.md             # Asset integration guide
