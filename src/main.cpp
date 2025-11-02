@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <fstream>
 #include <ctime>
 
 #include "Shader.h"
@@ -13,6 +14,7 @@
 #include "Wind.h"
 #include "TextureGenerator.h"
 #include "DebugConsole.h"
+#include "ScriptCompiler.h"
 
 // Settings
 const unsigned int SCR_WIDTH = 1280;
@@ -227,6 +229,60 @@ int main() {
     unsigned int grassTexture = TextureGenerator::generateGrassTexture();
     unsigned int waterTexture = TextureGenerator::generateWaterTexture();
 
+    // Initialize Script Compiler System
+    auto& scriptManager = ScriptCompilerManager::GetInstance();
+    scriptManager.Initialize();
+    auto& scriptCompiler = scriptManager.GetCompiler();
+    
+    // Register engine functions for scripts
+    scriptCompiler.RegisterFunction("wireframe", [](const std::vector<std::string>& args) {
+        wireframeMode = !wireframeMode;
+        glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
+        std::cout << "[Script] Wireframe mode: " << (wireframeMode ? "ON" : "OFF") << std::endl;
+    });
+    
+    scriptCompiler.RegisterFunction("cellshading", [](const std::vector<std::string>& args) {
+        if (args.empty()) {
+            cellShadingEnabled = !cellShadingEnabled;
+        } else {
+            cellShadingEnabled = (args[0] == "on" || args[0] == "1" || args[0] == "true");
+        }
+        std::cout << "[Script] Cell shading: " << (cellShadingEnabled ? "ON" : "OFF") << std::endl;
+    });
+    
+    scriptCompiler.RegisterFunction("setcam", [](const std::vector<std::string>& args) {
+        if (args.size() >= 3) {
+            try {
+                float x = std::stof(args[0]);
+                float y = std::stof(args[1]);
+                float z = std::stof(args[2]);
+                camera.Position = glm::vec3(x, y, z);
+                std::cout << "[Script] Camera moved to (" << x << ", " << y << ", " << z << ")" << std::endl;
+            } catch (const std::exception& e) {
+                std::cerr << "[Script Error] Invalid number format" << std::endl;
+            }
+        } else {
+            std::cerr << "[Script Error] Usage: setcam <x> <y> <z>" << std::endl;
+        }
+    });
+    
+    scriptCompiler.RegisterFunction("getcam", [](const std::vector<std::string>& args) {
+        std::cout << "[Script] Camera position: (" 
+                  << camera.Position.x << ", "
+                  << camera.Position.y << ", "
+                  << camera.Position.z << ")" << std::endl;
+    });
+    
+    // Load startup scripts if they exist
+    std::ifstream startupCheck("scripts/startup.script");
+    if (startupCheck.good()) {
+        startupCheck.close();
+        std::cout << "[ScriptCompiler] Loading startup script..." << std::endl;
+        if (!scriptManager.LoadScript("scripts/startup.script")) {
+            std::cerr << "[ScriptCompiler] Warning: Failed to load startup script" << std::endl;
+        }
+    }
+    
     // Initialize Debug Console
     auto debugConsole = DebugConsole::GetInstance();
     
@@ -275,6 +331,43 @@ int main() {
                 std::to_string(camera.Position.x) + ", " +
                 std::to_string(camera.Position.y) + ", " +
                 std::to_string(camera.Position.z) + ")");
+        });
+    
+    // Register script execution command in debug console
+    debugConsole->RegisterCommand("script", "Execute a script command (usage: script <command>)",
+        [](const std::vector<std::string>& args) {
+            if (args.empty()) {
+                DebugConsole::GetInstance()->Log("[Error] Usage: script <command>");
+                return;
+            }
+            
+            // Reconstruct the command from args
+            std::string command = args[0];
+            for (size_t i = 1; i < args.size(); i++) {
+                command += " " + args[i];
+            }
+            
+            auto& scriptManager = ScriptCompilerManager::GetInstance();
+            if (scriptManager.ExecuteCommand(command)) {
+                DebugConsole::GetInstance()->Log("[Script] Command executed: " + command);
+            } else {
+                DebugConsole::GetInstance()->Log("[Script Error] Failed to execute: " + command);
+            }
+        });
+    
+    debugConsole->RegisterCommand("loadscript", "Load and execute a script file (usage: loadscript <filename>)",
+        [](const std::vector<std::string>& args) {
+            if (args.empty()) {
+                DebugConsole::GetInstance()->Log("[Error] Usage: loadscript <filename>");
+                return;
+            }
+            
+            auto& scriptManager = ScriptCompilerManager::GetInstance();
+            if (scriptManager.LoadScript(args[0])) {
+                DebugConsole::GetInstance()->Log("[Script] Loaded and executed: " + args[0]);
+            } else {
+                DebugConsole::GetInstance()->Log("[Script Error] Failed to load: " + args[0]);
+            }
         });
 
     std::cout << "\n=== 3D Game Engine Started ===" << std::endl;

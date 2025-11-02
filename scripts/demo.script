@@ -1,0 +1,29 @@
+# Example Script - Demo Features
+# This script demonstrates various script compiler features
+
+# Print a message
+print === Script Compiler Demo ===
+
+# Set and get variables
+set player_health 100
+set player_name "Hero"
+print Player setup complete
+
+# Get variable
+get player_health
+
+# Camera control examples
+print Moving camera to spawn point
+setcam 50.0 30.0 50.0
+
+# Get current camera position
+getcam
+
+# Toggle rendering features
+print Enabling wireframe mode
+wireframe
+
+print Enabling cell shading
+cellshading on
+
+print === Demo Complete ===

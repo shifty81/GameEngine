@@ -1,0 +1,20 @@
+# Example Startup Script for GameEngine
+# This script runs automatically when the engine starts (if it exists)
+# Lines starting with # or ; are comments
+
+# Print welcome message
+print GameEngine Custom Script System Loaded!
+
+# Set some initial variables
+set fps_target 60
+set quality high
+
+# Example: Enable cell shading by default
+# Uncomment the line below to enable
+# cellshading on
+
+# Example: Set camera to a specific position
+# Uncomment to use:
+# setcam 100.0 50.0 100.0
+
+print Startup script completed successfully
