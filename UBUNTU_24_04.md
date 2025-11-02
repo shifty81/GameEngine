@@ -262,6 +262,56 @@ glxinfo | grep "OpenGL renderer"
 # If it does, your GPU drivers are not working correctly
 ```
 
+**Problem: "Failed to create GLFW window"**
+
+This error occurs when GLFW cannot create an OpenGL window context. Common causes:
+
+1. **No display available** (headless system/server):
+```bash
+# Install Xvfb (X Virtual Frame Buffer)
+sudo apt-get install xvfb
+
+# Start Xvfb
+Xvfb :99 -screen 0 1024x768x24 &
+
+# Set DISPLAY environment variable
+export DISPLAY=:99
+
+# Run the engine
+./run.sh
+```
+
+2. **OpenGL version not supported**:
+```bash
+# Check OpenGL version (requires mesa-utils)
+sudo apt-get install mesa-utils
+glxinfo | grep "OpenGL version"
+
+# Should show OpenGL 3.3 or higher
+# If not, update your graphics drivers
+```
+
+3. **Missing DISPLAY environment variable**:
+```bash
+# Check if DISPLAY is set
+echo $DISPLAY
+
+# If empty, either:
+# - You're running from SSH without X forwarding
+# - Use Xvfb as shown above
+```
+
+4. **Graphics driver issues**:
+```bash
+# For NVIDIA cards
+sudo ubuntu-drivers autoinstall
+sudo reboot
+
+# For AMD/Intel (Mesa drivers)
+sudo apt-get update
+sudo apt-get upgrade
+```
+
 ### Wayland vs X11
 
 Ubuntu 24.04 uses Wayland by default, but the engine works on both:
@@ -278,6 +328,86 @@ echo $XDG_SESSION_TYPE
 4. Log in
 
 The engine works on both Wayland and X11, but X11 may have better compatibility with older tools.
+
+## Running in Headless Environments
+
+For servers, CI/CD pipelines, or SSH sessions without X forwarding, you can use Xvfb (X Virtual Frame Buffer):
+
+### Quick Setup
+
+```bash
+# Install Xvfb
+sudo apt-get install xvfb mesa-utils
+
+# Start Xvfb on display :99
+Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+# Set DISPLAY variable
+export DISPLAY=:99
+
+# Verify OpenGL is available
+glxinfo | grep "OpenGL version"
+
+# Run the engine
+./run.sh
+```
+
+### Automated Startup Script
+
+Create a wrapper script `run-headless.sh`:
+
+```bash
+#!/bin/bash
+# Start Xvfb if not already running
+if ! pgrep -x "Xvfb" > /dev/null; then
+    echo "Starting Xvfb..."
+    Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    sleep 2
+fi
+
+# Export DISPLAY
+export DISPLAY=:99
+
+# Run the game engine
+./build/bin/GameEngine
+```
+
+Make it executable and run:
+```bash
+chmod +x run-headless.sh
+./run-headless.sh
+```
+
+### Docker/Container Support
+
+For running in containers, add Xvfb to your Dockerfile:
+
+```dockerfile
+RUN apt-get update && apt-get install -y \
+    xvfb \
+    libgl1-mesa-dev \
+    mesa-utils
+
+# Start Xvfb in your entrypoint
+CMD Xvfb :99 -screen 0 1024x768x24 & \
+    export DISPLAY=:99 && \
+    ./build/bin/GameEngine
+```
+
+### GitHub Actions / CI/CD
+
+For automated testing in CI/CD:
+
+```yaml
+- name: Setup Display
+  run: |
+    sudo apt-get install -y xvfb
+    Xvfb :99 -screen 0 1024x768x24 &
+    echo "DISPLAY=:99" >> $GITHUB_ENV
+
+- name: Run Engine
+  run: ./run.sh
+```
 
 ## Performance Tips
 

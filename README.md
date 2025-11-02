@@ -50,6 +50,15 @@ cd GameEngine
 ./run.sh
 ```
 
+**For Headless/Server Environments:**
+```bash
+# Install Xvfb for virtual display
+sudo apt-get install xvfb
+
+# Run with the headless script
+./run-headless.sh
+```
+
 ## Engine Features
 
 ### Graphics and Rendering
@@ -193,6 +202,47 @@ sudo apt-get install mesa-utils
 glxinfo | grep "OpenGL version"
 # Should show OpenGL 3.3 or higher
 ```
+
+## Troubleshooting
+
+### "Failed to create GLFW window" Error
+
+This error occurs when the application cannot create an OpenGL window. Common solutions:
+
+**1. No Display Available (Headless/Server/SSH):**
+```bash
+# Install and use Xvfb virtual framebuffer
+sudo apt-get install xvfb
+./run-headless.sh
+```
+
+**2. Missing Display Variable:**
+```bash
+# Check if DISPLAY is set
+echo $DISPLAY
+
+# If empty, set it (for X11 systems)
+export DISPLAY=:0
+```
+
+**3. Graphics Driver Issues:**
+```bash
+# Check OpenGL version
+glxinfo | grep "OpenGL version"
+
+# Update NVIDIA drivers
+sudo ubuntu-drivers autoinstall
+
+# Update Mesa (AMD/Intel)
+sudo apt-get update && sudo apt-get upgrade
+```
+
+**4. OpenGL Not Supported:**
+- Ensure your GPU supports OpenGL 3.3 or higher
+- Update graphics drivers
+- For virtual machines, ensure 3D acceleration is enabled
+
+For detailed troubleshooting, see [UBUNTU_24_04.md](UBUNTU_24_04.md).
 
 ## Documentation
 
