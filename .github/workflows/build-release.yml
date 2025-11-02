@@ -15,6 +15,8 @@ jobs:
   build-windows:
     name: Build Windows Release (MSVC)
     runs-on: windows-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -107,6 +109,8 @@ jobs:
   build-windows-mingw:
     name: Build Windows Release (MinGW)
     runs-on: windows-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
