@@ -22,6 +22,8 @@ jobs:
   test-windows-build:
     name: Test Windows Build
     runs-on: windows-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -69,6 +71,8 @@ jobs:
   test-linux-build:
     name: Test Linux Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
