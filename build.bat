@@ -31,7 +31,36 @@ echo.
 echo Generating Visual Studio project...
 cmake ..
 if %ERRORLEVEL% NEQ 0 (
-    echo ERROR: CMake configuration failed
+    echo.
+    echo ======================================================================
+    echo ERROR: CMake configuration failed!
+    echo ======================================================================
+    echo.
+    echo Common causes:
+    echo.
+    echo 1. Visual Studio C++ compiler not installed
+    echo    - Open Visual Studio Installer
+    echo    - Click "Modify" on your Visual Studio installation
+    echo    - Select "Desktop development with C++" workload
+    echo    - Click "Modify" to install
+    echo.
+    echo 2. Visual Studio not installed
+    echo    - Download Visual Studio Community (free):
+    echo      https://visualstudio.microsoft.com/downloads/
+    echo    - During installation, select "Desktop development with C++"
+    echo.
+    echo 3. Missing CMake or Git
+    echo    - Ensure both are installed and in your system PATH
+    echo.
+    echo After fixing the issue:
+    echo    - Delete the 'build' folder
+    echo    - Run build.bat again
+    echo.
+    echo For detailed troubleshooting, see README.md section:
+    echo "Building the Engine" ^-^> "Troubleshooting"
+    echo.
+    echo ======================================================================
+    echo.
     cd ..
     pause
     exit /b 1

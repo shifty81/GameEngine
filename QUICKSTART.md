@@ -76,9 +76,28 @@ The game engine window will open with a procedurally generated 3D world!
 
 ## Troubleshooting
 
+### "No CMAKE_C_COMPILER could be found" or "No CMAKE_CXX_COMPILER could be found"
+
+This is the most common error! It means Visual Studio is installed but the C++ compiler is not.
+
+**How to fix:**
+1. Open **Visual Studio Installer** (search in Windows Start menu)
+2. Click **"Modify"** button on your Visual Studio installation
+3. Check the box for **"Desktop development with C++"** workload
+4. Click **"Modify"** to install (takes 10-15 minutes)
+5. Delete your `GameEngine\build` folder
+6. Run `build.bat` again
+
+**Don't have Visual Studio?**
+- Download Visual Studio Community (free): https://visualstudio.microsoft.com/downloads/
+- During installation, select **"Desktop development with C++"**
+
+**Why this happens:** CMake found Visual Studio but the actual C++ compiler tools (cl.exe, MSBuild, Windows SDK) aren't installed. The "Desktop development with C++" workload includes everything needed.
+
 ### "CMake is not installed"
 - Make sure CMake is installed and added to PATH
 - Restart your command prompt after installation
+- Download from: https://cmake.org/download/
 
 ### "Visual Studio not found"
 - Install Visual Studio with C++ desktop development workload
@@ -87,10 +106,16 @@ The game engine window will open with a procedurally generated 3D world!
 ### "GameEngine.exe not found"
 - Make sure build.bat completed successfully
 - Check for error messages in the build output
+- Check README.md Troubleshooting section for detailed solutions
 
 ### Performance Issues
 - The engine is optimized, but large terrains may need a good GPU
 - Reduce terrain size in src/main.cpp (change 100, 100 to 50, 50)
+
+### Build takes forever (>20 minutes)
+- First build compiles Assimp library (~3000 files) and takes 10-15 minutes
+- This is normal! Subsequent builds are much faster (10-30 seconds)
+- Speed up with: `cmake --build . --config Release -j 8` (uses 8 cores)
 
 ## Customization
 

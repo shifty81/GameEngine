@@ -1,4 +1,29 @@
 cmake_minimum_required(VERSION 3.15)
+
+# =============================================================================
+# IMPORTANT: If you get "No CMAKE_C_COMPILER could be found" or 
+# "No CMAKE_CXX_COMPILER could be found" errors:
+#
+# Windows Users:
+#   You need to install Visual Studio with the "Desktop development with C++" 
+#   workload. This installs the MSVC compiler (cl.exe).
+#   
+#   Steps to fix:
+#   1. Download Visual Studio Community (free):
+#      https://visualstudio.microsoft.com/downloads/
+#   2. Run the installer
+#   3. Select "Desktop development with C++" workload
+#   4. Click Install/Modify
+#   5. After installation, delete the 'build' folder
+#   6. Run 'build.bat' again
+#
+# Linux Users:
+#   sudo apt-get install build-essential cmake libgl1-mesa-dev
+#
+# macOS Users:
+#   xcode-select --install
+# =============================================================================
+
 project(GameEngine VERSION 1.0.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
