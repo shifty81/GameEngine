@@ -3,6 +3,8 @@ echo ================================
 echo 3D Game Engine - Build Script
 echo ================================
 echo.
+echo WARNING: Having build issues? See TROUBLESHOOTING.md or WINDOWS_TROUBLESHOOTING.md
+echo.
 
 REM ============================================================================
 REM Step 0: Check for Visual Studio C++ Compiler
@@ -171,8 +173,10 @@ if %ERRORLEVEL% NEQ 0 (
     echo    - Delete the 'build' folder
     echo    - Run build.bat again
     echo.
-    echo For detailed troubleshooting, see README.md section:
-    echo "Building the Engine" ^-^> "Troubleshooting"
+    echo For detailed troubleshooting steps and solutions, see:
+    echo    - TROUBLESHOOTING.md (cross-platform issues)
+    echo    - WINDOWS_TROUBLESHOOTING.md (Windows-specific problems)
+    echo    - README.md section: "Building the Engine" -^> "Troubleshooting"
     echo.
     echo ======================================================================
     echo.
@@ -186,7 +190,17 @@ echo.
 echo Building project...
 "%CMAKE_EXE%" --build . --config Release
 if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo ======================================================================
     echo ERROR: Build failed
+    echo ======================================================================
+    echo.
+    echo For detailed troubleshooting, see:
+    echo    - TROUBLESHOOTING.md (cross-platform issues)
+    echo    - WINDOWS_TROUBLESHOOTING.md (Windows-specific problems)
+    echo.
+    echo ======================================================================
+    echo.
     cd ..
     pause
     exit /b 1

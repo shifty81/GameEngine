@@ -7,6 +7,8 @@
 # - C++ compiler and build tools
 # - Git submodules
 # - Required development libraries
+#
+# If you encounter issues, see TROUBLESHOOTING.md for detailed solutions.
 # ============================================================================
 
 set -e
@@ -14,6 +16,8 @@ set -e
 echo "========================================"
 echo "GameEngine - Automated Setup"
 echo "========================================"
+echo ""
+echo "⚠️  Having issues? See TROUBLESHOOTING.md for help"
 echo ""
 
 # Detect OS
@@ -225,4 +229,6 @@ echo ""
 echo "Next steps:"
 echo "  1. Run: ./build.sh (to compile the engine)"
 echo "  2. Run: ./run.sh (to start the game engine)"
+echo ""
+echo "⚠️  If you encounter build issues, see TROUBLESHOOTING.md for solutions."
 echo ""

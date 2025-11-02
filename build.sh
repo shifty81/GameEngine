@@ -4,6 +4,8 @@ echo "================================"
 echo "3D Game Engine - Build Script"
 echo "================================"
 echo ""
+echo "⚠️  Having build issues? See TROUBLESHOOTING.md for solutions."
+echo ""
 
 # ============================================================================
 # Step 0: Check for C++ Compiler
@@ -60,8 +62,14 @@ fi
 
 # Check if CMake is installed
 if ! command -v cmake &> /dev/null; then
+    echo "========================================================================"
     echo "ERROR: CMake is not installed"
+    echo "========================================================================"
+    echo ""
     echo "Please install CMake using your package manager"
+    echo ""
+    echo "For troubleshooting help, see TROUBLESHOOTING.md"
+    echo ""
     exit 1
 fi
 
@@ -82,7 +90,18 @@ echo ""
 echo "Generating makefiles..."
 cmake -DCMAKE_BUILD_TYPE=Release ..
 if [ $? -ne 0 ]; then
+    echo ""
+    echo "========================================================================"
     echo "ERROR: CMake configuration failed"
+    echo "========================================================================"
+    echo ""
+    echo "Common causes:"
+    echo "  - Missing C++ compiler (g++ or clang++)"
+    echo "  - Missing development libraries"
+    echo "  - Incorrect CMake version"
+    echo ""
+    echo "For detailed troubleshooting, see TROUBLESHOOTING.md"
+    echo ""
     cd ..
     exit 1
 fi
@@ -92,7 +111,13 @@ echo ""
 echo "Building project..."
 make -j$(nproc)
 if [ $? -ne 0 ]; then
+    echo ""
+    echo "========================================================================"
     echo "ERROR: Build failed"
+    echo "========================================================================"
+    echo ""
+    echo "For detailed troubleshooting, see TROUBLESHOOTING.md"
+    echo ""
     cd ..
     exit 1
 fi
