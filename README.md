@@ -13,6 +13,9 @@ A professional-grade 3D game engine built with C++ and OpenGL, optimized for Ubu
 
 ### One-Command Setup and Build
 
+The following command will install dependencies, clone the repository, build, and run the engine.
+**Note:** If any step fails, run the individual commands below for better error feedback.
+
 ```bash
 sudo apt-get update && sudo apt-get install -y build-essential cmake git \
     libgl1-mesa-dev libglu1-mesa-dev \

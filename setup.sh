@@ -1,6 +1,8 @@
 #!/bin/bash
 # ============================================================================
 # GameEngine Setup Script for Ubuntu 24.04 LTS
+# Version: 1.0
+# Target: Ubuntu 24.04 LTS (Noble Numbat) with GCC 13.3+ and CMake 3.28+
 # ============================================================================
 # This script automatically sets up your development environment including:
 # - CMake (if not found)

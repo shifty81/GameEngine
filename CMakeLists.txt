@@ -93,6 +93,8 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Linux-specific settings for Ubuntu 24.04
+# Note: This applies to all Unix-like systems (including other Linux distributions)
+# but the project is optimized for Ubuntu 24.04 LTS
 if(UNIX AND NOT APPLE)
     # Enable threading support
     find_package(Threads REQUIRED)
