@@ -11,6 +11,8 @@ A feature-rich 3D game engine built with C++ and OpenGL, featuring procedural wo
 - 💧 **Flowing Water System** - Dynamic water with flow direction and animation
 - 🌬️ **Wind System** - Realistic wind simulation for windmills and environmental effects
 - 🎨 **Procedural Texture Generation** - Auto-generated textures that can be replaced
+- 📦 **Asset Loading System** - Complete pipeline for 3D models and textures
+- 🌳 **Stylized Nature Kit Support** - Ready for integration with asset packs
 
 ### Technical Features
 - Modern OpenGL 3.3+ rendering
@@ -18,6 +20,11 @@ A feature-rich 3D game engine built with C++ and OpenGL, featuring procedural wo
 - Multi-octave Perlin noise for realistic terrain
 - Real-time lighting and shading
 - Transparent water rendering
+- **Assimp** integration for loading .obj, .fbx, .gltf, and more
+- **stb_image** for texture loading (png, jpg, tga, etc.)
+- Asset Manager with automatic caching
+- Mesh/Material system for complex models
+- Vertex animation support for wind effects
 - Cross-platform support (Windows, Linux, macOS)
 
 ## Building the Engine
@@ -135,22 +142,53 @@ The wind system simulates:
 ```
 GameEngine/
 ├── src/
-│   ├── main.cpp           # Main application entry point
-│   ├── Camera.h           # Camera controller
-│   ├── Shader.h           # Shader compilation and management
-│   ├── Terrain.h          # Procedural terrain generation
-│   ├── Water.h            # Water system
-│   ├── Wind.h             # Wind simulation
-│   └── TextureGenerator.h # Procedural texture generation
+│   ├── main.cpp              # Main application entry point
+│   ├── Camera.h              # Camera controller
+│   ├── Shader.h              # Shader compilation and management
+│   ├── Terrain.h             # Procedural terrain generation
+│   ├── Water.h               # Water system
+│   ├── Wind.h                # Wind simulation
+│   ├── TextureGenerator.h    # Procedural texture generation
+│   ├── Model.h               # 3D model loading and rendering
+│   ├── TextureLoader.h       # Texture loading with stb_image
+│   └── AssetManager.h        # Asset management system
+├── assets/
+│   ├── models/               # 3D model files (.obj, .fbx, .gltf)
+│   └── textures/             # Texture files (.png, .jpg, .tga)
 ├── external/
-│   ├── glfw/              # Window and input handling
-│   ├── glm/               # Mathematics library
-│   └── glad/              # OpenGL loader
-├── CMakeLists.txt         # Build configuration
-└── README.md              # This file
+│   ├── glfw/                 # Window and input handling
+│   ├── glm/                  # Mathematics library
+│   ├── glad/                 # OpenGL loader
+│   ├── assimp/               # 3D model loading library
+│   └── stb/                  # Image loading library
+├── CMakeLists.txt            # Build configuration
+├── README.md                 # This file
+└── ASSET_PIPELINE.md         # Asset integration guide
 ```
 
 ## Extending the Engine
+
+### Loading 3D Models (Stylized Nature Kit)
+
+```cpp
+#include "AssetManager.h"
+
+// Get asset manager instance
+AssetManager* assetMgr = AssetManager::GetInstance();
+
+// Load a tree model from your nature kit
+auto treeModel = assetMgr->LoadModel("assets/models/nature/tree_01.fbx", "oak_tree");
+
+// Load a rock model
+auto rockModel = assetMgr->LoadModel("assets/models/nature/rock_01.obj", "granite_rock");
+
+// Render in your game loop
+shader.use();
+shader.setMat4("model", transform);
+treeModel->Draw(shader);
+```
+
+See **ASSET_PIPELINE.md** for complete integration guide.
 
 ### Adding New Features
 The engine is designed to be easily extensible:
@@ -158,7 +196,8 @@ The engine is designed to be easily extensible:
 1. **New Objects**: Create classes similar to `Terrain` or `Water`
 2. **Custom Shaders**: Add new shader pairs in `main.cpp`
 3. **New Systems**: Follow the pattern of `Wind.h` for new systems
-4. **Custom Textures**: Replace files in `textures/` directory
+4. **Custom Textures**: Replace files in `textures/` directory or use Asset Manager
+5. **3D Models**: Place in `assets/` and load with Asset Manager
 
 ### Windmill Implementation (Future)
 The wind system is already prepared for windmills:
@@ -184,6 +223,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **GLFW** - Window and input management
 - **GLM** - Mathematics library
 - **GLAD** - OpenGL loader
+- **Assimp** - 3D model loading library
+- **stb_image** - Image loading library
 
 ## Contributing
 

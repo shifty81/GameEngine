@@ -30,6 +30,13 @@ cmake_install.cmake
 *.o
 *.obj
 
+# Asset files (uncomment if you don't want to commit large assets)
+# assets/**/*.fbx
+# assets/**/*.obj
+# assets/**/*.gltf
+# assets/**/*.png
+# assets/**/*.jpg
+
 # Other
 .DS_Store
 Thumbs.db

@@ -60,6 +60,8 @@ PFNGLBINDTEXTUREPROC glad_glBindTexture = NULL;
 PFNGLTEXPARAMETERIPROC glad_glTexParameteri = NULL;
 PFNGLTEXIMAGE2DPROC glad_glTexImage2D = NULL;
 PFNGLPOLYGONMODEPROC glad_glPolygonMode = NULL;
+PFNGLGENERATEMIPMAPPROC glad_glGenerateMipmap = NULL;
+PFNGLACTIVETEXTUREPROC glad_glActiveTexture = NULL;
 
 static void load_GL_VERSION_3_3(GLADloadproc load) {
     if(!GLAD_GL_VERSION_3_3) return;
@@ -104,6 +106,8 @@ static void load_GL_VERSION_3_3(GLADloadproc load) {
     glad_glTexParameteri = (PFNGLTEXPARAMETERIPROC)load("glTexParameteri");
     glad_glTexImage2D = (PFNGLTEXIMAGE2DPROC)load("glTexImage2D");
     glad_glPolygonMode = (PFNGLPOLYGONMODEPROC)load("glPolygonMode");
+    glad_glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)load("glGenerateMipmap");
+    glad_glActiveTexture = (PFNGLACTIVETEXTUREPROC)load("glActiveTexture");
 }
 
 static int find_extensionsGL(void) {

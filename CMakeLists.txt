@@ -28,6 +28,20 @@ target_include_directories(glad PUBLIC external/glad/include)
 # GLM for mathematics
 add_subdirectory(external/glm)
 
+# Assimp for 3D model loading
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_GLTF_IMPORTER ON CACHE BOOL "" FORCE)
+add_subdirectory(external/assimp)
+
+# stb_image for texture loading (header-only)
+add_library(stb_image INTERFACE)
+target_include_directories(stb_image INTERFACE external/stb)
+
 # Engine source files
 file(GLOB_RECURSE ENGINE_SOURCES 
     src/*.cpp
@@ -42,6 +56,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include
     ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/stb
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/assimp/include
 )
 
 # Link libraries
@@ -50,6 +66,8 @@ target_link_libraries(${PROJECT_NAME}
     glfw
     glad
     glm::glm
+    assimp
+    stb_image
 )
 
 # Windows-specific settings

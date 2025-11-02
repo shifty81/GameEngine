@@ -81,6 +81,9 @@ typedef ptrdiff_t GLsizeiptr;
 #define GL_LINEAR 0x2601
 #define GL_RGB 0x1907
 #define GL_RGBA 0x1908
+#define GL_RED 0x1903
+#define GL_LINEAR_MIPMAP_LINEAR 0x2703
+#define GL_TEXTURE0 0x84C0
 #define GL_TEXTURE_WRAP_S 0x2802
 #define GL_TEXTURE_WRAP_T 0x2803
 #define GL_TEXTURE_MIN_FILTER 0x2801
@@ -140,6 +143,8 @@ typedef void (APIENTRYP PFNGLBINDTEXTUREPROC)(GLenum target, GLuint texture);
 typedef void (APIENTRYP PFNGLTEXPARAMETERIPROC)(GLenum target, GLenum pname, GLint param);
 typedef void (APIENTRYP PFNGLTEXIMAGE2DPROC)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels);
 typedef void (APIENTRYP PFNGLPOLYGONMODEPROC)(GLenum face, GLenum mode);
+typedef void (APIENTRYP PFNGLGENERATEMIPMAPPROC)(GLenum target);
+typedef void (APIENTRYP PFNGLACTIVETEXTUREPROC)(GLenum texture);
 
 GLAPI PFNGLCLEARPROC glad_glClear;
 #define glClear glad_glClear
@@ -223,6 +228,10 @@ GLAPI PFNGLTEXIMAGE2DPROC glad_glTexImage2D;
 #define glTexImage2D glad_glTexImage2D
 GLAPI PFNGLPOLYGONMODEPROC glad_glPolygonMode;
 #define glPolygonMode glad_glPolygonMode
+GLAPI PFNGLGENERATEMIPMAPPROC glad_glGenerateMipmap;
+#define glGenerateMipmap glad_glGenerateMipmap
+GLAPI PFNGLACTIVETEXTUREPROC glad_glActiveTexture;
+#define glActiveTexture glad_glActiveTexture
 
 typedef void* (*GLADloadproc)(const char *name);
 int gladLoadGLLoader(GLADloadproc);
