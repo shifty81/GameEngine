@@ -1,9 +1,13 @@
 # Build directories
 build/
+build-mingw/
 bin/
 lib/
 _codeql_build_dir/
 _codeql_detected_source_root
+
+# MinGW installation (automatically downloaded)
+external/mingw64/
 
 # CMake files
 CMakeCache.txt

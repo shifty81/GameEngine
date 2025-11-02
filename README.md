@@ -21,7 +21,18 @@ A professional-grade 3D game engine built with C++ and OpenGL, featuring procedu
 
 Want to modify the code or contribute? See [Building the Engine](#building-the-engine) section below.
 
+**🆕 Build Without Visual Studio!** Windows users can now build without installing Visual Studio:
+
+👉 **[Build Without Visual Studio Guide](BUILD_WITHOUT_VS.md)** - Use free MinGW compiler
+
+- ✅ No Visual Studio installation required (saves 10+ GB!)
+- ✅ Fully automated setup - just double-click `build-mingw.bat`
+- ✅ Downloads and configures MinGW-w64 automatically
+- ✅ Free, open-source compiler with full C++20 support
+- ✅ Ready in minutes, not hours
+
 **⚠️ Need Help?** If you encounter any issues during setup or building:
+- **[BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)** - Build without Visual Studio (MinGW)
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive troubleshooting guide for all platforms
 - **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific detailed solutions
 - **[VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)** - Step-by-step Visual Studio installation guide
@@ -128,11 +139,27 @@ This engine now includes **all essential game engine systems** for production-re
 
 ### 🚀 Quick Build Options
 
-#### Option 1: One-Click Build (Windows - Recommended for First-Time Users!)
+#### Option 1: Build Without Visual Studio (Windows - NEW! 🆕)
 
-**Just want to build quickly?** Use the automated one-click installer:
+**Don't have Visual Studio?** No problem! Build using the free MinGW-w64 compiler:
 
-👉 **[OneClickBuild.bat](ONECLICK_BUILD.md)** - Automated Windows build system
+👉 **[Build Without Visual Studio Guide](BUILD_WITHOUT_VS.md)** - Complete MinGW setup
+
+- ✅ **No Visual Studio Required** - Uses free MinGW-w64 compiler
+- ✅ **Fully Automated** - Just double-click `build-mingw.bat`
+- ✅ **Small Download** - Only ~150 MB vs 10+ GB for Visual Studio
+- ✅ **Fast Setup** - Ready in minutes, not hours
+- ✅ **Full C++20 Support** - Same features as Visual Studio
+
+**Usage:** Simply double-click `build-mingw.bat` in the repository root!
+
+See **[BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)** for complete documentation.
+
+#### Option 2: One-Click Build with Visual Studio (Windows - Traditional Method)
+
+**Already have Visual Studio?** Use the automated one-click installer:
+
+👉 **[OneClickBuild.bat](ONECLICK_BUILD.md)** - Automated Visual Studio build
 
 - ✅ **Fully Automated** - One double-click builds everything
 - ✅ **Prerequisite Detection** - Automatically checks for required tools
@@ -144,7 +171,7 @@ This engine now includes **all essential game engine systems** for production-re
 
 See **[ONECLICK_BUILD.md](ONECLICK_BUILD.md)** for complete documentation.
 
-#### Option 2: Manual Build (For Experienced Users)
+#### Option 3: Manual Build (For Experienced Users)
 
 Continue to the detailed build instructions below if you prefer manual control.
 
@@ -155,6 +182,21 @@ Continue to the detailed build instructions below if you prefer manual control.
 **⚠️ IMPORTANT:** If you encounter any issues during installation, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive troubleshooting guidance.
 
 #### Windows
+
+**Choose Your Compiler:**
+
+**Option A: MinGW-w64 (Recommended - No Visual Studio!)**
+- CMake 3.20 or higher
+- **MinGW-w64 GCC 13.2.0+** (automatically installed by `build-mingw.bat`)
+  - Full C++20 support
+  - ~150 MB download
+  - Setup in 2-5 minutes
+  - See [BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md) for complete guide
+- Git
+
+**💡 TIP:** Just run `build-mingw.bat` - it handles everything automatically!
+
+**Option B: Visual Studio (Traditional Method)**
 - CMake 3.20 or higher
 - **Visual Studio Community 2022 (version 17.8 or newer, including 17.14.x)** or Visual Studio 2019 (version 16.11 or newer)
   - **Tested versions:** Visual Studio 2022 v17.8 through v17.14
@@ -522,14 +564,42 @@ cmake ..
 cmake --build . --config Release
 ```
 
-#### Windows (MinGW)
+#### Windows (MinGW - Build Without Visual Studio!)
+
+**Automated Build (Recommended):**
+
+Simply double-click `build-mingw.bat` in the repository root!
+
+The script will automatically:
+- Download and install MinGW-w64 (if not present)
+- Configure the build system
+- Compile the engine
+- Create the executable at `build-mingw\bin\GameEngine.exe`
+
+**Manual Build:**
 ```bash
-mkdir build
-cd build
-cmake -G "MinGW Makefiles" ..
-cmake --build .
-.\bin\GameEngine.exe
+# Clone repository with dependencies
+git clone --recursive https://github.com/shifty81/GameEngine.git
+cd GameEngine
+
+# Run MinGW setup (first time only)
+tools\setup-mingw.bat
+
+# Create build directory
+mkdir build-mingw
+cd build-mingw
+
+# Configure with MinGW
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+
+# Build with parallel jobs
+cmake --build . --config Release -j 8
+
+# Run
+..\build-mingw\bin\GameEngine.exe
 ```
+
+**For detailed troubleshooting and advanced options, see [BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)**
 
 #### Linux/macOS
 
@@ -703,7 +773,9 @@ GameEngine/
 │   └── stb/                      # Image loading library
 ├── CMakeLists.txt                # Build configuration
 ├── OneClickBuild.bat             # ✨ NEW - One-click Windows build installer
+├── build-mingw.bat               # 🆕 NEW - Build without Visual Studio (MinGW)
 ├── README.md                     # This file
+├── BUILD_WITHOUT_VS.md           # 🆕 NEW - Build without Visual Studio guide
 ├── SCRIPT_COMPILER.md            # ✨ NEW - Script compiler documentation
 ├── ONECLICK_BUILD.md             # ✨ NEW - One-click build guide
 ├── ENGINE_SYSTEMS.md             # ✨ NEW - Complete systems documentation
@@ -725,6 +797,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
+- **[BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)** - 🆕 NEW! Build without Visual Studio using MinGW
 - **[ONECLICK_BUILD.md](ONECLICK_BUILD.md)** - 🚀 NEW! One-click automated build system for Windows
 - **[SCRIPT_COMPILER.md](SCRIPT_COMPILER.md)** - ✨ NEW! Custom script compiler documentation and scripting guide
 - **[DOWNLOAD_BINARIES.md](DOWNLOAD_BINARIES.md)** - 📦 Download pre-built executables (no compilation needed!)
