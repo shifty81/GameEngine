@@ -20,7 +20,7 @@ Every commit triggers the **Build Test** workflow, which:
 ### Platforms Tested
 
 - **Windows**: Visual Studio 2022 with MSVC compiler
-- **Linux**: Ubuntu latest with GCC compiler
+- **Linux**: Ubuntu 24.04 LTS with GCC 13.3 compiler
 
 ## Accessing Test Binaries
 

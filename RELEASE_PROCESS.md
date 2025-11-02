@@ -100,10 +100,10 @@ You can also manually trigger a build without creating a tag:
 - `README_BINARIES.txt` - Instructions for binary users
 
 **Build Configuration:**
-- Compiler: GCC (latest on Ubuntu)
+- Compiler: GCC 13.3 (Ubuntu 24.04 LTS)
 - Architecture: x64
 - Configuration: Release (optimized)
-- Platform: Ubuntu 20.04+ compatible
+- Platform: Ubuntu 24.04 LTS (compatible with Ubuntu 20.04+)
 
 ---
 

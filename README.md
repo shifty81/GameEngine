@@ -21,6 +21,17 @@ A professional-grade 3D game engine built with C++ and OpenGL, featuring procedu
 
 Want to modify the code or contribute? See [Building the Engine](#building-the-engine) section below.
 
+**🐧 Ubuntu 24.04 LTS Users!** The engine is fully tested and optimized for Ubuntu 24.04:
+
+👉 **[Ubuntu 24.04 LTS Development Guide](UBUNTU_24_04.md)** - Complete Linux development guide
+
+- ✅ Tested with GCC 13.3 and full C++20 support
+- ✅ One-command setup and build process
+- ✅ Performance optimization tips for Linux
+- ✅ IDE setup recommendations (VS Code, CLion, Qt Creator)
+- ✅ Graphics debugging tools and techniques
+- ✅ Troubleshooting specific to Ubuntu 24.04
+
 **🆕 Build Without Visual Studio!** Windows users can now build without installing Visual Studio:
 
 👉 **[Build Without Visual Studio Guide](BUILD_WITHOUT_VS.md)** - Use free MinGW compiler
@@ -207,18 +218,19 @@ Continue to the detailed build instructions below if you prefer manual control.
 
 **💡 TIP:** Run `setup.bat` for automated dependency checking and installation assistance.
 
-#### Linux
+#### Linux (Ubuntu 24.04 LTS Recommended)
 ```bash
 sudo apt-get install cmake build-essential libgl1-mesa-dev libglu1-mesa-dev \
     libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 ```
-Note: Requires GCC 10+ or Clang 11+ for C++20 support
+**Tested on:** Ubuntu 24.04 LTS (Noble Numbat) with GCC 13.3
+**Note:** Requires GCC 10+ or Clang 11+ for C++20 support
 
 **Automated Setup (Recommended):**
 ```bash
 ./setup.sh
 ```
-This script will automatically check and install all required dependencies.
+This script will automatically check and install all required dependencies on Ubuntu 24.04 LTS and other Linux distributions.
 
 **💡 TIP:** If you encounter compiler or dependency issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for Linux-specific solutions.
 
@@ -797,6 +809,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
+- **[UBUNTU_24_04.md](UBUNTU_24_04.md)** - 🐧 **NEW!** Complete Ubuntu 24.04 LTS development guide
 - **[BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)** - 🆕 NEW! Build without Visual Studio using MinGW
 - **[ONECLICK_BUILD.md](ONECLICK_BUILD.md)** - 🚀 NEW! One-click automated build system for Windows
 - **[SCRIPT_COMPILER.md](SCRIPT_COMPILER.md)** - ✨ NEW! Custom script compiler documentation and scripting guide
@@ -820,7 +833,7 @@ This repository uses GitHub Actions for automated testing and binary builds:
 ### Build Testing
 Every push and pull request automatically triggers the **Build Test** workflow:
 - ✅ **Windows Build Test** - Validates compilation with Visual Studio 2022
-- ✅ **Linux Build Test** - Validates compilation with GCC on Ubuntu
+- ✅ **Linux Build Test** - Validates compilation with GCC 13.3 on Ubuntu 24.04 LTS
 - ✅ **Build Artifacts** - Uploads test binaries for verification (7-day retention)
 - 🔗 **View Build Status**: Check the badge at the top of this README
 

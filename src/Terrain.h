@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <random>
+#include <algorithm>
 #include "Shader.h"
 
 class PerlinNoise {
