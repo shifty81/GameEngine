@@ -51,6 +51,7 @@ PFNGLDELETEPROGRAMPROC glad_glDeleteProgram = NULL;
 PFNGLGETUNIFORMLOCATIONPROC glad_glGetUniformLocation = NULL;
 PFNGLUNIFORMMATRIX4FVPROC glad_glUniformMatrix4fv = NULL;
 PFNGLUNIFORM1IPROC glad_glUniform1i = NULL;
+PFNGLUNIFORM1FPROC glad_glUniform1f = NULL;
 PFNGLUNIFORM3FPROC glad_glUniform3f = NULL;
 PFNGLUNIFORM4FPROC glad_glUniform4f = NULL;
 PFNGLBLENDFUNCPROC glad_glBlendFunc = NULL;
@@ -97,6 +98,7 @@ static void load_GL_VERSION_3_3(GLADloadproc load) {
     glad_glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
     glad_glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)load("glUniformMatrix4fv");
     glad_glUniform1i = (PFNGLUNIFORM1IPROC)load("glUniform1i");
+    glad_glUniform1f = (PFNGLUNIFORM1FPROC)load("glUniform1f");
     glad_glUniform3f = (PFNGLUNIFORM3FPROC)load("glUniform3f");
     glad_glUniform4f = (PFNGLUNIFORM4FPROC)load("glUniform4f");
     glad_glBlendFunc = (PFNGLBLENDFUNCPROC)load("glBlendFunc");
