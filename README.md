@@ -95,15 +95,32 @@ This engine now includes **all essential game engine systems** for production-re
 
 #### Linux
 ```bash
-sudo apt-get install cmake build-essential libgl1-mesa-dev libglu1-mesa-dev
+sudo apt-get install cmake build-essential libgl1-mesa-dev libglu1-mesa-dev \
+    libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 ```
 Note: Requires GCC 10+ or Clang 11+ for C++20 support
 
+**Automated Setup (Recommended):**
+```bash
+./setup.sh
+```
+This script will automatically check and install all required dependencies.
+
 #### macOS
 ```bash
+# Install Xcode Command Line Tools (includes clang++)
+xcode-select --install
+
+# Install CMake
 brew install cmake
 ```
 Note: Requires Xcode 12+ for C++20 support
+
+**Automated Setup (Recommended):**
+```bash
+./setup.sh
+```
+This script will automatically check and install all required dependencies.
 
 ### Build Instructions
 
@@ -422,13 +439,48 @@ cmake --build .
 ```
 
 #### Linux/macOS
+
+**Quick Build (Recommended):**
 ```bash
+# Automated setup (first time only)
+./setup.sh
+
+# Build the project
+./build.sh
+
+# Run the engine
+./run.sh
+```
+
+**Manual Build:**
+```bash
+# Create and enter build directory
 mkdir build
 cd build
+
+# Generate makefiles
 cmake ..
-make -j4
+
+# Build (use all CPU cores for faster compilation)
+make -j$(nproc)  # Linux
+make -j$(sysctl -n hw.ncpu)  # macOS
+
+# Run
 ./bin/GameEngine
 ```
+
+**Troubleshooting:**
+If you encounter compiler errors, run the diagnostic tool:
+```bash
+./tools/check-compiler.sh
+```
+
+Or use autofix to automatically install missing dependencies:
+```bash
+./tools/check-compiler.sh -autofix
+```
+
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for comprehensive troubleshooting guidance.
 
 ## Controls
 
@@ -554,6 +606,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 - **[README.md](README.md)** - This file - Overview and build instructions
 - **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** - Complete engine systems documentation
 - **[DEBUG_CONSOLE_GUIDE.md](DEBUG_CONSOLE_GUIDE.md)** - Debug console usage and command reference
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive cross-platform troubleshooting guide
 - **[VERSION_UPDATES.md](VERSION_UPDATES.md)** - Architecture modernization and dependency updates
 - **[ITCHIO_ASSETS.md](ITCHIO_ASSETS.md)** - Easy itch.io asset integration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for beginners
