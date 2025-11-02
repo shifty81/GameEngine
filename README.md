@@ -519,6 +519,8 @@ See **ITCHIO_INTEGRATION.md** for complete guide including:
 - Achievement systems
 - Publishing to itch.io
 
+**Example Code**: See `src/ItchIOExample.cpp.example` for a complete working example demonstrating all features.
+
 ### Adding New Features
 The engine is designed to be easily extensible:
 

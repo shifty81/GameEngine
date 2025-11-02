@@ -544,3 +544,59 @@ For issues with the itch.io platform:
 - Visit https://itch.io/docs
 - Contact itch.io support
 - Check the itch.io developer forums
+
+## Running the Example
+
+A complete example demonstrating all itch.io features is included in `src/ItchIOExample.cpp.example`.
+
+### To compile and run the example:
+
+```bash
+# Rename the example file
+cp src/ItchIOExample.cpp.example src/ItchIOExample.cpp
+
+# Create a standalone build
+g++ -std=c++17 -I./src -o ItchIOExample src/ItchIOExample.cpp
+
+# Run with simulated itch.io environment
+export ITCHIO_API_KEY="test_key_12345"
+./ItchIOExample
+
+# Clean up
+rm ItchIOExample src/ItchIOExample.cpp
+```
+
+### Example Output:
+
+```
+========================================
+  Game Engine - itch.io Integration Demo
+========================================
+
+[Success] itch.io API key detected!
+[Info] Initializing itch.io connection...
+
+[Success] itch.io API initialized!
+
+[Info] Fetching user profile...
+
+--- User Profile ---
+User ID:      12345
+Username:     testuser
+Display Name: Test User
+Profile URL:  https://testuser.itch.io
+Account Type: Gamer
+-------------------
+
+[Info] Verifying purchase status...
+[Success] Purchase verified!
+[Info] Enabling premium features...
+
+--- Premium Features Enabled ---
+✓ All game modes unlocked
+✓ Exclusive skins and items
+✓ Cloud save sync
+✓ Achievement tracking
+✓ Premium support
+-------------------------------
+```
