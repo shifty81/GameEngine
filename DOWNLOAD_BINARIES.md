@@ -12,6 +12,14 @@ Visit the [Releases page](https://github.com/shifty81/GameEngine/releases/latest
 - 🪟 **Windows** (64-bit): `GameEngine-Windows-x64.zip`
 - 🐧 **Linux** (64-bit): `GameEngine-Linux-x64.tar.gz`
 
+### Development/Test Binaries
+
+Want to test the latest development version? 
+
+Every commit is automatically built and tested. Test binaries are available from the **Actions** tab for 7 days.
+
+👉 **[See TESTING_BINARIES.md](TESTING_BINARIES.md)** for instructions on accessing test builds.
+
 ---
 
 ## Windows Installation
