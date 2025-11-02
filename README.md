@@ -46,6 +46,11 @@ This engine now includes **all essential game engine systems** for production-re
 - 🧠 **Memory Tracker** - GPU memory usage tracking
 - 🔍 **OpenGL Debugger** - Automatic OpenGL error detection and logging
 - ⏱️ **High-Precision Timers** - Performance measurement tools
+- 🛠️ **Visual Studio Compiler Detector** - Automated detection and fix for VC++ 2022 compiler issues
+  - Comprehensive VS 2022 installation validation
+  - C++ workload component verification
+  - Auto-fix option to launch Visual Studio Installer
+  - Detailed error messages with actionable solutions
 - 🎮 **Debug Console** - Runtime command console with enable/disable toggle (press ` key)
   - Command history with up/down arrow navigation
   - Variable get/set system
@@ -253,6 +258,34 @@ After a successful build:
 
 The game engine window should open displaying a procedurally generated 3D world with terrain and water!
 
+##### Automated Setup (Recommended for First-Time Users)
+
+For the easiest setup experience, use the automated setup script:
+
+```bash
+# From GameEngine root directory
+setup.bat
+```
+
+This script automatically:
+1. Checks for Git installation
+2. Checks for CMake (offers to download portable version if missing)
+3. **Detects Visual Studio 2022 and C++ compiler installation**
+4. **Offers to automatically fix compiler issues**
+5. Initializes git submodules
+6. Provides clear next steps
+
+**Features**:
+- Automatic compiler detection using advanced diagnostics
+- One-click fix for missing C++ components
+- Downloads portable CMake if needed (no PATH configuration required)
+- Comprehensive error messages with actionable solutions
+
+After setup completes, simply run:
+```bash
+build.bat
+```
+
 ##### Quick Build (Alternative Method)
 
 For convenience, use the provided batch script:
@@ -263,11 +296,12 @@ build.bat
 ```
 
 This script automatically:
-1. Updates git submodules
-2. Creates build directory
-3. Runs CMake configuration
-4. Builds Release configuration
-5. Reports success/failure
+1. **Checks for Visual Studio C++ compiler issues (with optional auto-fix)**
+2. Updates git submodules
+3. Creates build directory
+4. Runs CMake configuration
+5. Builds Release configuration
+6. Reports success/failure
 
 To run the engine:
 ```bash
@@ -278,7 +312,15 @@ run.bat
 
 **Problem**: "No CMAKE_C_COMPILER could be found" or "No CMAKE_CXX_COMPILER could be found"
 - **Cause**: Visual Studio is installed but the C++ compiler (MSVC) is not installed
-- **Solution**: 
+- **Quick Fix**: Run the automated compiler detection tool:
+  ```batch
+  tools\check-vs2022-compiler.bat
+  ```
+  This will diagnose the issue and provide specific fix instructions. Use the `-autofix` flag to automatically open Visual Studio Installer:
+  ```batch
+  tools\check-vs2022-compiler.bat -autofix
+  ```
+- **Manual Solution**: 
   1. Open **Visual Studio Installer** (search in Start menu)
   2. Click **"Modify"** on your Visual Studio installation
   3. Select the **"Desktop development with C++"** workload (checkbox on the left)
@@ -290,6 +332,7 @@ run.bat
   - https://visualstudio.microsoft.com/downloads/
   - During installation, select **"Desktop development with C++"** workload
 - **Note**: This error means CMake found Visual Studio but the actual C++ compiler tools aren't installed. The "Desktop development with C++" workload includes cl.exe (C++ compiler), MSBuild, and Windows SDK.
+- **See Also**: For comprehensive troubleshooting, see [WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)
 
 **Problem**: "CMake is not recognized as an internal or external command"
 - **Cause**: CMake is not in your system PATH, or is installed in a custom location
@@ -313,8 +356,20 @@ run.bat
   - Instead of running `cmake ..`, use the full path: `C:\make\bin\cmake.exe ..`
 - **Note**: The PATH variable tells Windows where to find executable files. Without it, you must use the full path to cmake.exe every time
 
-**Problem**: "Could not find Visual Studio"
-- **Solution**: Install Visual Studio with "Desktop development with C++" workload, or specify generator with `-G` flag
+**Problem**: "Could not find Visual Studio" or Visual Studio compiler detection issues
+- **Quick Fix**: Run the compiler detection diagnostic tool:
+  ```batch
+  tools\check-vs2022-compiler.bat
+  ```
+  This comprehensive tool will:
+  - Detect Visual Studio 2022 installation
+  - Verify C++ compiler (MSVC) is installed
+  - Check for required components (C++ build tools, Windows SDK)
+  - Provide specific fix instructions with component names
+  - Optionally auto-launch Visual Studio Installer to fix issues
+- **Manual Solution**: Install Visual Studio with "Desktop development with C++" workload, or specify generator with `-G` flag
+
+**For more details on the compiler detection tool**, see [tools/README.md](tools/README.md)
 
 **Problem**: "LINK : fatal error LNK1104: cannot open file 'opengl32.lib'"
 - **Solution**: Windows SDK is missing. Reinstall Visual Studio and ensure Windows SDK is selected in the installer
