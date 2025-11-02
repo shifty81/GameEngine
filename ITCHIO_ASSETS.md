@@ -96,9 +96,15 @@ pine_tree->Draw(shader);
 
 **How to load:**
 ```cpp
+// Name parameter is optional - defaults to the path if not provided
+auto model = AssetManager::GetInstance()->LoadModel(
+    "assets/models/your_model.fbx"  // Uses path as name
+);
+
+// Or provide a custom name for easier reference
 auto model = AssetManager::GetInstance()->LoadModel(
     "assets/models/your_model.fbx", 
-    "unique_name"
+    "my_tree"  // Custom name
 );
 ```
 
@@ -121,9 +127,16 @@ auto model = AssetManager::GetInstance()->LoadModel(
 
 **How to load:**
 ```cpp
+// Simple load - uses path as name
 auto texture = AssetManager::GetInstance()->LoadTexture(
-    "assets/textures/my_texture.png", 
-    "texture_name"
+    "assets/textures/my_texture.png"
+);
+
+// With custom name
+auto texture = AssetManager::GetInstance()->LoadTexture(
+    "assets/textures/my_texture.png",
+    "",  // directory (optional)
+    "my_tex"  // custom name
 );
 ```
 
