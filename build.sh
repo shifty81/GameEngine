@@ -80,7 +80,7 @@ cd build
 # Generate makefiles
 echo ""
 echo "Generating makefiles..."
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 if [ $? -ne 0 ]; then
     echo "ERROR: CMake configuration failed"
     cd ..
