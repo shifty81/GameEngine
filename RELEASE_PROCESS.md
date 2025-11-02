@@ -2,6 +2,24 @@
 
 This document describes how to create and publish new releases with pre-built binaries.
 
+## CI/CD Workflows
+
+The repository uses two GitHub Actions workflows:
+
+### 1. Build Test Workflow (`.github/workflows/build-test.yml`)
+- **Trigger**: Every push and pull request to main, develop, and copilot branches
+- **Purpose**: Catch build issues early
+- **Artifacts**: Test binaries retained for 7 days
+- **See**: [TESTING_BINARIES.md](TESTING_BINARIES.md) for accessing test builds
+
+### 2. Build and Release Workflow (`.github/workflows/build-release.yml`)
+- **Trigger**: Version tags (e.g., `v1.0.0`) or manual dispatch
+- **Purpose**: Create production releases
+- **Artifacts**: Full binary packages published to GitHub Releases
+- **See**: [DOWNLOAD_BINARIES.md](DOWNLOAD_BINARIES.md) for user download instructions
+
+---
+
 ## Automated Release Process
 
 The repository is configured with GitHub Actions to automatically build and publish binaries when you create a release tag.
@@ -126,7 +144,33 @@ Mark these as "pre-release" when creating the GitHub Release.
 
 ## Testing Before Release
 
-Before creating a release tag, test the builds:
+Before creating a release tag, ensure the code is building correctly:
+
+### Automated Build Testing
+
+Every push and pull request automatically runs the **Build Test** workflow, which:
+- Builds Windows and Linux binaries
+- Verifies executables are created
+- Uploads test artifacts (7-day retention)
+
+**See the build status:** Check the badge at the top of [README.md](README.md)
+
+**Access test artifacts:** See [TESTING_BINARIES.md](TESTING_BINARIES.md) for instructions
+
+### Manual Testing Steps
+
+1. **Wait for Build Test to pass** on your branch
+2. **Download test artifacts** from the Actions tab (optional but recommended)
+3. **Test both platforms** if possible:
+   - Executable runs correctly
+   - No crashes on startup
+   - Basic functionality works
+4. **Fix any issues** and wait for builds to pass again
+5. **Create release tag** once everything is verified
+
+### Alternative: Manual Workflow Trigger
+
+You can also manually trigger a test build:
 
 1. **Manual workflow trigger** to create test artifacts
 2. **Download and test** both Windows and Linux builds
