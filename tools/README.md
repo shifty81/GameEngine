@@ -20,7 +20,7 @@ PowerShell script that performs comprehensive detection of Visual Studio 2022 an
 # Basic detection (shows detailed output)
 powershell -ExecutionPolicy Bypass -File tools\check-vs2022-compiler.ps1
 
-# Silent detection (minimal output, useful for scripts)
+# Quiet mode (minimal output, useful for scripts)
 powershell -ExecutionPolicy Bypass -File tools\check-vs2022-compiler.ps1 -Quiet
 
 # Automatic fix (opens Visual Studio Installer if issues found)

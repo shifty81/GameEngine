@@ -167,8 +167,8 @@ $requiredComponents = @(
         Name = "MSVC v143 - VS 2022 C++ x64/x86 build tools (Latest)"
     },
     @{
-        Id = "Microsoft.VisualStudio.Component.Windows11SDK.22621"
-        Name = "Windows 11 SDK (10.0.22621.0)"
+        Id = "Microsoft.VisualStudio.Component.Windows11SDK"
+        Name = "Windows SDK (10.0 or 11.0)"
         Alternative = "Microsoft.VisualStudio.Component.Windows10SDK"
     }
 )
@@ -242,20 +242,32 @@ if (Test-Path $vcToolsPath) {
 # ============================================================================
 Write-Header "Step 5: Verifying Windows SDK"
 
-$windowsSdkPath = Join-Path $vsPath "VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt"
-if (Test-Path $windowsSdkPath) {
-    Write-Success "Windows SDK configuration found"
-} else {
-    Write-Warning "Windows SDK configuration not found"
+# Check for Windows Kits in standard and environment variable locations
+$windowsKitsFound = $false
+$sdkPaths = @(
+    "C:\Program Files (x86)\Windows Kits\10\Include",
+    "C:\Program Files (x86)\Windows Kits\11\Include"
+)
+
+# Add environment variable path if it exists
+if ($env:WindowsSdkDir) {
+    $sdkPaths += Join-Path $env:WindowsSdkDir "Include"
 }
 
-# Check Windows Kits
-$windowsKitsPath = "C:\Program Files (x86)\Windows Kits\10\Include"
-if (Test-Path $windowsKitsPath) {
-    $sdkVersions = Get-ChildItem $windowsKitsPath -Directory | Sort-Object Name -Descending
-    if ($sdkVersions.Count -gt 0) {
-        Write-Success "Windows SDK found: $($sdkVersions[0].Name)"
+foreach ($kitsPath in $sdkPaths) {
+    if (Test-Path $kitsPath) {
+        $sdkVersions = Get-ChildItem $kitsPath -Directory | Sort-Object Name -Descending
+        if ($sdkVersions.Count -gt 0) {
+            Write-Success "Windows SDK found: $($sdkVersions[0].Name) at $kitsPath"
+            $windowsKitsFound = $true
+            break
+        }
     }
+}
+
+if (-not $windowsKitsFound) {
+    Write-Warning "Windows SDK not found in standard locations"
+    Write-Info "SDK may be installed in a custom location or missing"
 }
 
 # ============================================================================
@@ -301,7 +313,6 @@ if ($missingComponents.Count -eq 0) {
     Write-Host "     ✓ Windows 11 SDK (or Windows 10 SDK)"
     Write-Host "     ✓ C++ CMake tools for Windows"
     Write-Host "  6. Click 'Modify' to install"
-    Write-Host "  7. Restart your computer after installation"
     Write-Host ""
     
     Write-ColorOutput "Option 2: Repair Visual Studio Installation" $Cyan

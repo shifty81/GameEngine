@@ -177,7 +177,7 @@ if exist "tools\check-vs2022-compiler.bat" (
         echo.
         echo The compiler detection script found issues with your Visual Studio installation.
         echo.
-        choice /C YN /M "Would you like to automatically open the Visual Studio Installer to fix these issues"
+        choice /C YN /M "Would you like to automatically open the Visual Studio Installer to fix these issues?"
         if errorlevel 2 (
             choice /C YN /M "Continue setup anyway"
             if errorlevel 2 exit /b 1
