@@ -21,6 +21,17 @@ A professional-grade 3D game engine built with C++ and OpenGL, featuring procedu
 
 Want to modify the code or contribute? See [Building the Engine](#building-the-engine) section below.
 
+**🐧 Ubuntu 24.04 LTS Users!** The engine is fully tested and optimized for Ubuntu 24.04:
+
+👉 **[Ubuntu 24.04 LTS Development Guide](UBUNTU_24_04.md)** - Complete Linux development guide
+
+- ✅ Tested with GCC 13.3 and full C++20 support
+- ✅ One-command setup and build process
+- ✅ Performance optimization tips for Linux
+- ✅ IDE setup recommendations (VS Code, CLion, Qt Creator)
+- ✅ Graphics debugging tools and techniques
+- ✅ Troubleshooting specific to Ubuntu 24.04
+
 **🆕 Build Without Visual Studio!** Windows users can now build without installing Visual Studio:
 
 👉 **[Build Without Visual Studio Guide](BUILD_WITHOUT_VS.md)** - Use free MinGW compiler
@@ -798,6 +809,7 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
+- **[UBUNTU_24_04.md](UBUNTU_24_04.md)** - 🐧 **NEW!** Complete Ubuntu 24.04 LTS development guide
 - **[BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)** - 🆕 NEW! Build without Visual Studio using MinGW
 - **[ONECLICK_BUILD.md](ONECLICK_BUILD.md)** - 🚀 NEW! One-click automated build system for Windows
 - **[SCRIPT_COMPILER.md](SCRIPT_COMPILER.md)** - ✨ NEW! Custom script compiler documentation and scripting guide
