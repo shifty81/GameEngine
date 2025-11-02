@@ -258,6 +258,21 @@ run.bat
 
 ##### Troubleshooting
 
+**Problem**: "No CMAKE_C_COMPILER could be found" or "No CMAKE_CXX_COMPILER could be found"
+- **Cause**: Visual Studio is installed but the C++ compiler (MSVC) is not installed
+- **Solution**: 
+  1. Open **Visual Studio Installer** (search in Start menu)
+  2. Click **"Modify"** on your Visual Studio installation
+  3. Select the **"Desktop development with C++"** workload (checkbox on the left)
+  4. Click **"Modify"** button at bottom right to install
+  5. Wait for installation to complete (may take 10-15 minutes)
+  6. Delete the `build` folder in your GameEngine directory
+  7. Run `build.bat` again
+- **Alternative**: If you don't have Visual Studio, download Community Edition (free):
+  - https://visualstudio.microsoft.com/downloads/
+  - During installation, select **"Desktop development with C++"** workload
+- **Note**: This error means CMake found Visual Studio but the actual C++ compiler tools aren't installed. The "Desktop development with C++" workload includes cl.exe (C++ compiler), MSBuild, and Windows SDK.
+
 **Problem**: "CMake is not recognized as an internal or external command"
 - **Solution**: CMake is not in your system PATH. Reinstall CMake and select "Add to PATH" option, or add manually:
   - Default location: `C:\Program Files\CMake\bin`
