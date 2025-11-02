@@ -23,11 +23,50 @@ This guide will help you get the 3D Game Engine running on your Windows machine 
 
 Follow the steps below to set up your development environment and build the engine yourself.
 
+**🆕 NEW: Build Without Visual Studio!**
+
+You now have two options for building on Windows:
+
+**Option A: MinGW (Recommended - No Visual Studio!)**
+- Just double-click `build-mingw.bat`
+- Downloads MinGW automatically
+- No 10+ GB Visual Studio installation
+- See [BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md) for details
+
+**Option B: Visual Studio (Traditional Method)**
+- Requires Visual Studio installation
+- Continue with Step 1 below
+
 ## Step 1: Prerequisites
 
 **⚠️ Having installation issues?** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for solutions to common problems.
 
-### Install Required Software
+### Option A: MinGW Build (No Visual Studio Required!)
+
+**Simple: Just run `build-mingw.bat`!**
+
+The script will automatically handle everything. You only need:
+
+1. **Git for Windows**
+   - Download from: https://git-scm.com/download/win
+   - Install with default options
+
+2. **CMake** (optional - script can download portable version)
+   - Download from: https://cmake.org/download/
+   - Choose "Windows x64 Installer"
+   - During installation, select "Add CMake to system PATH"
+
+Then simply double-click `build-mingw.bat` and it will:
+- Download MinGW-w64 automatically
+- Configure the build
+- Compile the engine
+- Create the executable
+
+**For details, see [BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md)**
+
+### Option B: Visual Studio Build (Traditional Method)
+
+**Install Required Software:**
 
 1. **Git for Windows**
    - Download from: https://git-scm.com/download/win
@@ -52,6 +91,31 @@ Follow the steps below to set up your development environment and build the engi
 
 **⚠️ Before proceeding:** If you encounter any errors, refer to [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for solutions.
 
+### For MinGW Build (Option A):
+
+1. Open Command Prompt or PowerShell
+
+2. Clone the repository:
+   ```
+   git clone --recursive https://github.com/shifty81/GameEngine.git
+   cd GameEngine
+   ```
+
+3. Build the project:
+   ```
+   build-mingw.bat
+   ```
+   This will:
+   - Download MinGW-w64 automatically (if not present)
+   - Download dependencies (GLFW, GLM, Assimp)
+   - Configure the project with MinGW
+   - Compile the engine
+   - Create the executable at `build-mingw\bin\GameEngine.exe`
+   
+   **⚠️ Build failed?** See [BUILD_WITHOUT_VS.md](BUILD_WITHOUT_VS.md) troubleshooting section
+
+### For Visual Studio Build (Option B):
+
 1. Open Command Prompt or PowerShell
 
 2. Clone the repository:
@@ -65,10 +129,10 @@ Follow the steps below to set up your development environment and build the engi
    build.bat
    ```
    This will:
-   - Download dependencies (GLFW, GLM)
-   - Configure the project
+   - Download dependencies (GLFW, GLM, Assimp)
+   - Configure the project with Visual Studio
    - Compile the engine
-   - Create the executable
+   - Create the executable at `build\bin\Release\GameEngine.exe`
    
    **⚠️ Build failed?** Check the error message and refer to:
    - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for general build issues
@@ -77,6 +141,12 @@ Follow the steps below to set up your development environment and build the engi
 
 ## Step 3: Run the Engine
 
+**For MinGW Build:**
+```
+build-mingw\bin\GameEngine.exe
+```
+
+**For Visual Studio Build:**
 Simply double-click `run.bat` or run from command line:
 ```
 run.bat
