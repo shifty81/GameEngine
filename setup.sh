@@ -43,7 +43,7 @@ if ! command -v git &> /dev/null; then
     
     if [ "$OS" = "linux" ]; then
         echo "Install Git with:"
-        echo "  sudo apt-get install git    (Debian/Ubuntu)"
+        echo "  sudo apt-get install git    (Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian)"
         echo "  sudo yum install git        (RHEL/CentOS)"
         echo "  sudo dnf install git        (Fedora)"
     elif [ "$OS" = "macos" ]; then
@@ -69,7 +69,7 @@ if ! command -v cmake &> /dev/null; then
     
     if [ "$OS" = "linux" ]; then
         echo "Install CMake with:"
-        echo "  sudo apt-get install cmake    (Debian/Ubuntu)"
+        echo "  sudo apt-get install cmake    (Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian)"
         echo "  sudo yum install cmake        (RHEL/CentOS)"
         echo "  sudo dnf install cmake        (Fedora)"
         
@@ -172,7 +172,7 @@ else
             echo "   ERROR: g++ not found"
             echo ""
             echo "   Install build tools with:"
-            echo "     sudo apt-get install build-essential    (Debian/Ubuntu)"
+            echo "     sudo apt-get install build-essential    (Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian)"
             echo "     sudo yum groupinstall 'Development Tools'    (RHEL/CentOS)"
             
             read -p "Continue anyway? (y/n) " -n 1 -r

@@ -118,8 +118,9 @@ This document details the updates made to bring the game engine's architecture t
 - **OpenGL**: 3.3 or higher
 - **Operating Systems**:
   - Windows 10/11
-  - Linux (Ubuntu 20.04+, or equivalent)
+  - Linux (Ubuntu 24.04 LTS recommended, Ubuntu 20.04+ supported, or equivalent)
   - macOS 10.15 (Catalina) or higher
+- **Tested on**: Ubuntu 24.04 LTS with GCC 13.3
 
 ### Known Limitations
 - OpenGL 3.3 does not support:

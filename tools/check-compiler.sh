@@ -247,10 +247,12 @@ if [ "$OS" = "linux" ]; then
         
         if [ "$PKG_MANAGER" = "apt-get" ]; then
             echo -e "${CYAN}Option 1: Install All Required Packages (Recommended)${RESET}"
-            echo "  Run this command:"
+            echo "  For Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian, run:"
             echo ""
             echo "  sudo apt-get update"
             echo "  sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
+            echo ""
+            echo "  Note: Ubuntu 24.04 LTS comes with GCC 13.3 which has excellent C++20 support!"
             echo ""
             
             if [ "$AUTO_FIX" = true ]; then

@@ -207,18 +207,19 @@ Continue to the detailed build instructions below if you prefer manual control.
 
 **💡 TIP:** Run `setup.bat` for automated dependency checking and installation assistance.
 
-#### Linux
+#### Linux (Ubuntu 24.04 LTS Recommended)
 ```bash
 sudo apt-get install cmake build-essential libgl1-mesa-dev libglu1-mesa-dev \
     libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 ```
-Note: Requires GCC 10+ or Clang 11+ for C++20 support
+**Tested on:** Ubuntu 24.04 LTS (Noble Numbat) with GCC 13.3
+**Note:** Requires GCC 10+ or Clang 11+ for C++20 support
 
 **Automated Setup (Recommended):**
 ```bash
 ./setup.sh
 ```
-This script will automatically check and install all required dependencies.
+This script will automatically check and install all required dependencies on Ubuntu 24.04 LTS and other Linux distributions.
 
 **💡 TIP:** If you encounter compiler or dependency issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for Linux-specific solutions.
 
@@ -820,7 +821,7 @@ This repository uses GitHub Actions for automated testing and binary builds:
 ### Build Testing
 Every push and pull request automatically triggers the **Build Test** workflow:
 - ✅ **Windows Build Test** - Validates compilation with Visual Studio 2022
-- ✅ **Linux Build Test** - Validates compilation with GCC on Ubuntu
+- ✅ **Linux Build Test** - Validates compilation with GCC 13.3 on Ubuntu 24.04 LTS
 - ✅ **Build Artifacts** - Uploads test binaries for verification (7-day retention)
 - 🔗 **View Build Status**: Check the badge at the top of this README
 

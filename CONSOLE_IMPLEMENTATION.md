@@ -233,11 +233,12 @@ User Input Flow:
 
 ### Platform Testing
 - [ ] Windows 10/11 with Visual Studio 2019+
-- [ ] Linux (Ubuntu 20.04+) with GCC 10+
+- [ ] Linux (Ubuntu 24.04 LTS with GCC 13.3, Ubuntu 20.04+ with GCC 10+)
 - [ ] macOS 10.15+ with Xcode 12+
 
 ### Compiler Testing
 - [ ] MSVC (Visual Studio 2019/2022)
+- [ ] GCC 13.3 (Ubuntu 24.04 LTS)
 - [ ] GCC 10+
 - [ ] Clang 11+
 - [ ] Apple Clang (Xcode 12+)

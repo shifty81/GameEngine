@@ -3,11 +3,45 @@
 This guide helps you resolve common build issues across all platforms (Windows, Linux, macOS).
 
 ## Table of Contents
+- [Ubuntu 24.04 LTS Quick Start](#ubuntu-2404-lts-quick-start)
 - [Windows Issues](#windows-issues)
 - [Linux Issues](#linux-issues)
 - [macOS Issues](#macos-issues)
 - [Common Issues (All Platforms)](#common-issues-all-platforms)
 - [Automated Fix Tools](#automated-fix-tools)
+
+---
+
+## Ubuntu 24.04 LTS Quick Start
+
+Ubuntu 24.04 LTS (Noble Numbat) is **fully supported and tested** with this project. It comes with GCC 13.3 which has excellent C++20 support.
+
+### Quick Setup on Ubuntu 24.04 LTS
+
+**Step 1: Install all required packages**
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential cmake git \
+    libgl1-mesa-dev libglu1-mesa-dev \
+    libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+```
+
+**Step 2: Clone and build**
+```bash
+git clone --recursive https://github.com/shifty81/GameEngine.git
+cd GameEngine
+./setup.sh
+./build.sh
+./run.sh
+```
+
+**That's it!** The project should build successfully on Ubuntu 24.04 LTS.
+
+### Verified Versions on Ubuntu 24.04 LTS
+- **GCC**: 13.3.0
+- **CMake**: 3.20+
+- **OpenGL**: Mesa 3.3+
+- **Kernel**: 6.8+
 
 ---
 
@@ -111,12 +145,14 @@ CMake Error at CMakeLists.txt:26 (project):
 
 **Manual Fix:**
 
-**Debian/Ubuntu:**
+**Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian:**
 ```bash
 sudo apt-get update
 sudo apt-get install -y build-essential cmake libgl1-mesa-dev libglu1-mesa-dev \
     libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 ```
+
+**Note for Ubuntu 24.04 LTS:** This version comes with GCC 13.3, which has excellent C++20 support and is fully tested with this project.
 
 **RHEL/CentOS/Fedora:**
 ```bash
@@ -145,7 +181,7 @@ sudo pacman -S base-devel cmake mesa glu libx11 libxrandr libxinerama libxcursor
 
 **Fix:**
 
-**Debian/Ubuntu:**
+**Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian:**
 ```bash
 sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev
 ```
@@ -163,7 +199,7 @@ sudo yum install -y mesa-libGL-devel mesa-libGLU-devel
 
 **Fix:**
 
-**Debian/Ubuntu:**
+**Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian:**
 ```bash
 sudo apt-get install -y libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 ```

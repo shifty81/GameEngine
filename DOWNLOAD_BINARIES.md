@@ -105,7 +105,7 @@ Double-click GameEngine.exe
 
 The GameEngine requires OpenGL and X11 libraries:
 
-**Ubuntu/Debian:**
+**Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian:**
 ```bash
 sudo apt-get update
 sudo apt-get install libgl1-mesa-glx libglu1-mesa libx11-6 libxrandr2 \
@@ -139,11 +139,12 @@ sudo pacman -S mesa libx11 libxrandr libxinerama libxcursor libxi
 
 ### System Requirements (Linux)
 
-- **Operating System:** Ubuntu 20.04+ or equivalent distribution (64-bit)
+- **Operating System:** Ubuntu 24.04 LTS (or Ubuntu 20.04+, or equivalent distribution) (64-bit)
 - **Graphics Card:** GPU with OpenGL 3.3 or higher support
 - **RAM:** 2GB minimum, 4GB recommended
 - **Disk Space:** 100MB for the engine + assets
 - **Dependencies:** OpenGL libraries, X11 libraries (see Step 2)
+- **Tested on:** Ubuntu 24.04 LTS with GCC 13.3
 
 ### Troubleshooting (Linux)
 
