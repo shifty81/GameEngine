@@ -229,9 +229,8 @@ int main() {
 
     // Initialize Debug Console
     auto debugConsole = DebugConsole::GetInstance();
-    ConsoleCommandRegistry::RegisterGameCommands(debugConsole);
     
-    // Register game-specific console commands
+    // Register custom game-specific console commands
     debugConsole->RegisterCommand("wireframe", "Toggle wireframe mode",
         [](const std::vector<std::string>& args) {
             wireframeMode = !wireframeMode;
@@ -240,7 +239,7 @@ int main() {
                 std::string(wireframeMode ? "ON" : "OFF"));
         });
     
-    debugConsole->RegisterCommand("cellshading", "Toggle cell shading",
+    debugConsole->RegisterCommand("cellshading", "Toggle or set cell shading (usage: cellshading [on|off])",
         [](const std::vector<std::string>& args) {
             if (args.empty()) {
                 cellShadingEnabled = !cellShadingEnabled;
@@ -251,15 +250,19 @@ int main() {
                 std::string(cellShadingEnabled ? "ON" : "OFF"));
         });
     
-    debugConsole->RegisterCommand("setcam", "Set camera position (x y z)",
+    debugConsole->RegisterCommand("setcam", "Set camera position (usage: setcam <x> <y> <z>)",
         [](const std::vector<std::string>& args) {
             if (args.size() >= 3) {
-                float x = std::stof(args[0]);
-                float y = std::stof(args[1]);
-                float z = std::stof(args[2]);
-                camera.Position = glm::vec3(x, y, z);
-                DebugConsole::GetInstance()->Log("[Console] Camera moved to (" + 
-                    args[0] + ", " + args[1] + ", " + args[2] + ")");
+                try {
+                    float x = std::stof(args[0]);
+                    float y = std::stof(args[1]);
+                    float z = std::stof(args[2]);
+                    camera.Position = glm::vec3(x, y, z);
+                    DebugConsole::GetInstance()->Log("[Console] Camera moved to (" + 
+                        args[0] + ", " + args[1] + ", " + args[2] + ")");
+                } catch (const std::exception& e) {
+                    DebugConsole::GetInstance()->Log("[Error] Invalid number format. Usage: setcam <x> <y> <z>");
+                }
             } else {
                 DebugConsole::GetInstance()->Log("[Error] Usage: setcam <x> <y> <z>");
             }
