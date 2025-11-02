@@ -19,6 +19,11 @@ A professional-grade 3D game engine built with C++ and OpenGL, featuring procedu
 
 Want to modify the code or contribute? See [Building the Engine](#building-the-engine) section below.
 
+**⚠️ Need Help?** If you encounter any issues during setup or building:
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive troubleshooting guide for all platforms
+- **[WINDOWS_TROUBLESHOOTING.md](WINDOWS_TROUBLESHOOTING.md)** - Windows-specific detailed solutions
+- **[VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)** - Step-by-step Visual Studio installation guide
+
 ---
 
 ## 🎮 Complete Engine Systems
