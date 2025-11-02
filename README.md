@@ -83,6 +83,20 @@ This engine now includes **all essential game engine systems** for production-re
   - Extensible command registration
   - Built-in commands (help, clear, set, get, echo)
   - Game control commands (wireframe, cellshading, camera control)
+- ✨ **Custom Script Compiler** - NEW! Runtime script compilation system
+  - Compile and execute scripts without C++ recompilation
+  - Simple command-based scripting language
+  - Engine integration (camera, rendering, game logic)
+  - Variable system with persistence
+  - File-based script loading (.script files)
+  - Debug console integration
+  - Extensible command registration
+- 🚀 **One-Click Build System** - NEW! Automated Windows build installer
+  - Single-click setup and build on Windows
+  - Automatic prerequisite detection and installation
+  - Visual Studio compiler validation
+  - Git submodule management
+  - Error handling with actionable guidance
 
 ### 🎯 Asset Integration
 - 🎨 **itch.io Asset Support** - Easy integration of downloaded assets from itch.io marketplace
@@ -93,7 +107,7 @@ This engine now includes **all essential game engine systems** for production-re
 ### ⚠️ Integration-Ready Systems
 - ⚛️ **Physics Framework** - AABB collision, rigid bodies (integrate Bullet/PhysX)
 - 🔊 **Audio Framework** - 3D spatial audio system (integrate OpenAL/FMOD)
-- 📜 **Scripting-Ready** - Architecture supports Lua/ChaiScript integration
+- 📜 **Custom Script Compiler** - ✅ INTEGRATED! Runtime script compilation and execution
 
 ### Technical Capabilities
 - Modern OpenGL 3.3+ rendering pipeline
@@ -111,6 +125,30 @@ This engine now includes **all essential game engine systems** for production-re
 - Runtime debug console system
 
 ## Building the Engine
+
+### 🚀 Quick Build Options
+
+#### Option 1: One-Click Build (Windows - Recommended for First-Time Users!)
+
+**Just want to build quickly?** Use the automated one-click installer:
+
+👉 **[OneClickBuild.bat](ONECLICK_BUILD.md)** - Automated Windows build system
+
+- ✅ **Fully Automated** - One double-click builds everything
+- ✅ **Prerequisite Detection** - Automatically checks for required tools
+- ✅ **Installation Help** - Guides you through any missing tools
+- ✅ **Error Handling** - Clear messages with actionable solutions
+- ✅ **First-Time Friendly** - Perfect for beginners
+
+**Usage:** Simply double-click `OneClickBuild.bat` in the repository root!
+
+See **[ONECLICK_BUILD.md](ONECLICK_BUILD.md)** for complete documentation.
+
+#### Option 2: Manual Build (For Experienced Users)
+
+Continue to the detailed build instructions below if you prefer manual control.
+
+---
 
 ### Prerequisites
 
@@ -565,8 +603,23 @@ When the debug console is open (press ` key):
 - **get <name>** - Get a console variable value
 - **listvars** - List all console variables
 - **echo <text>** - Print text to console
+- **script <command>** - ✨ NEW! Execute a script compiler command
+- **loadscript <filename>** - ✨ NEW! Load and execute a script file
 - **exit/quit** - Close console
 - **Up/Down Arrow** - Navigate command history
+
+### Script Compiler Commands
+The custom script compiler allows runtime script execution:
+- Scripts are placed in the `scripts/` directory
+- Use `.script` file extension
+- See **[SCRIPT_COMPILER.md](SCRIPT_COMPILER.md)** for complete scripting guide
+
+**Quick Examples:**
+```
+script print Hello World
+script setcam 75.0 40.0 75.0
+loadscript scripts/demo.script
+```
 
 ## Procedural Generation
 
@@ -664,6 +717,8 @@ See **[ENGINE_SYSTEMS.md](ENGINE_SYSTEMS.md)** for comprehensive documentation o
 
 ### Quick References
 - **[README.md](README.md)** - This file - Overview and build instructions
+- **[ONECLICK_BUILD.md](ONECLICK_BUILD.md)** - 🚀 NEW! One-click automated build system for Windows
+- **[SCRIPT_COMPILER.md](SCRIPT_COMPILER.md)** - ✨ NEW! Custom script compiler documentation and scripting guide
 - **[DOWNLOAD_BINARIES.md](DOWNLOAD_BINARIES.md)** - 📦 Download pre-built executables (no compilation needed!)
 - **[VISUAL_STUDIO_SETUP.md](VISUAL_STUDIO_SETUP.md)** - 📖 Detailed Visual Studio installation guide with specific versions and visual instructions
 - **[VS2022_COMPATIBILITY.md](VS2022_COMPATIBILITY.md)** - ✅ Visual Studio 2022 compatibility notes (including v17.14.x)
