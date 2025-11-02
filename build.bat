@@ -5,6 +5,49 @@ echo ================================
 echo.
 
 REM ============================================================================
+REM Step 0: Check for Visual Studio C++ Compiler
+REM ============================================================================
+echo Checking for Visual Studio C++ compiler...
+echo.
+
+if exist "tools\check-vs2022-compiler.bat" (
+    call tools\check-vs2022-compiler.bat -quiet
+    if %ERRORLEVEL% NEQ 0 (
+        echo.
+        echo ========================================================================
+        echo WARNING: Visual Studio 2022 C++ compiler issues detected!
+        echo ========================================================================
+        echo.
+        echo The compiler detection found problems with your Visual Studio setup.
+        echo.
+        choice /C YN /M "Run detailed diagnostics and get fix instructions"
+        if not errorlevel 2 (
+            echo.
+            call tools\check-vs2022-compiler.bat
+            echo.
+            echo ========================================================================
+            echo.
+            choice /C YN /M "Would you like to automatically open the Visual Studio Installer"
+            if not errorlevel 2 (
+                call tools\check-vs2022-compiler.bat -autofix
+                echo.
+                echo Please fix the issues and run build.bat again.
+                pause
+                exit /b 1
+            )
+        )
+        echo.
+        choice /C YN /M "Continue with build anyway (may fail)"
+        if errorlevel 2 exit /b 1
+        echo.
+    )
+) else (
+    echo Compiler detection script not found, skipping compiler check...
+    echo (Run setup.bat first to enable compiler detection)
+    echo.
+)
+
+REM ============================================================================
 REM Auto-detect CMake from multiple sources
 REM ============================================================================
 set CMAKE_EXE=cmake
