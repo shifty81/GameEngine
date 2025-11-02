@@ -4,7 +4,7 @@ echo "================================"
 echo "3D Game Engine - Build Script"
 echo "================================"
 echo ""
-echo "⚠️  Having build issues? See TROUBLESHOOTING.md for solutions."
+echo "⚠️  Having build issues? See UBUNTU_24_04.md for solutions."
 echo ""
 
 # ============================================================================
@@ -66,9 +66,11 @@ if ! command -v cmake &> /dev/null; then
     echo "ERROR: CMake is not installed"
     echo "========================================================================"
     echo ""
-    echo "Please install CMake using your package manager"
+    echo "Please install CMake:"
+    echo "  sudo apt-get update"
+    echo "  sudo apt-get install -y cmake"
     echo ""
-    echo "For troubleshooting help, see TROUBLESHOOTING.md"
+    echo "For troubleshooting help, see UBUNTU_24_04.md"
     echo ""
     exit 1
 fi
@@ -96,11 +98,11 @@ if [ $? -ne 0 ]; then
     echo "========================================================================"
     echo ""
     echo "Common causes:"
-    echo "  - Missing C++ compiler (g++ or clang++)"
-    echo "  - Missing development libraries"
-    echo "  - Incorrect CMake version"
+    echo "  - Missing C++ compiler (GCC 13.3+)"
+    echo "  - Missing development libraries (OpenGL, X11)"
+    echo "  - Incorrect CMake version (need 3.28+)"
     echo ""
-    echo "For detailed troubleshooting, see TROUBLESHOOTING.md"
+    echo "For detailed troubleshooting, see UBUNTU_24_04.md"
     echo ""
     cd ..
     exit 1
@@ -116,7 +118,7 @@ if [ $? -ne 0 ]; then
     echo "ERROR: Build failed"
     echo "========================================================================"
     echo ""
-    echo "For detailed troubleshooting, see TROUBLESHOOTING.md"
+    echo "For detailed troubleshooting, see UBUNTU_24_04.md"
     echo ""
     cd ..
     exit 1

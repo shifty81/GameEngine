@@ -1,37 +1,36 @@
 #!/bin/bash
 # ============================================================================
-# GameEngine Setup Script - Automated Dependency Installation
+# GameEngine Setup Script for Ubuntu 24.04 LTS
 # ============================================================================
 # This script automatically sets up your development environment including:
 # - CMake (if not found)
-# - C++ compiler and build tools
+# - C++ compiler and build tools (GCC 13.3)
 # - Git submodules
-# - Required development libraries
+# - Required development libraries (OpenGL, X11)
 #
-# If you encounter issues, see TROUBLESHOOTING.md for detailed solutions.
+# If you encounter issues, see UBUNTU_24_04.md for detailed solutions.
 # ============================================================================
 
 set -e
 
 echo "========================================"
-echo "GameEngine - Automated Setup"
+echo "GameEngine - Ubuntu 24.04 Setup"
 echo "========================================"
 echo ""
-echo "⚠️  Having issues? See TROUBLESHOOTING.md for help"
-echo ""
 
-# Detect OS
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    OS="linux"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    OS="macos"
-else
-    echo "ERROR: Unsupported operating system: $OSTYPE"
+# Verify we're on Ubuntu
+if [ ! -f /etc/os-release ]; then
+    echo "ERROR: Cannot detect OS. This script is designed for Ubuntu 24.04 LTS."
     exit 1
 fi
 
-echo "Operating System: $OS"
-echo ""
+source /etc/os-release
+if [[ "$ID" != "ubuntu" ]]; then
+    echo "WARNING: This script is optimized for Ubuntu 24.04 LTS."
+    echo "Detected: $NAME $VERSION"
+    echo "Proceeding anyway..."
+    echo ""
+fi
 
 # ============================================================================
 # Step 1: Check for Git
@@ -40,23 +39,13 @@ echo "[1/4] Checking for Git..."
 if ! command -v git &> /dev/null; then
     echo "ERROR: Git is not installed"
     echo ""
-    
-    if [ "$OS" = "linux" ]; then
-        echo "Install Git with:"
-        echo "  sudo apt-get install git    (Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian)"
-        echo "  sudo yum install git        (RHEL/CentOS)"
-        echo "  sudo dnf install git        (Fedora)"
-    elif [ "$OS" = "macos" ]; then
-        echo "Install Git with:"
-        echo "  brew install git"
-        echo "Or install Xcode Command Line Tools:"
-        echo "  xcode-select --install"
-    fi
-    
+    echo "Install Git with:"
+    echo "  sudo apt-get update"
+    echo "  sudo apt-get install -y git"
+    echo ""
     exit 1
 fi
-
-echo "   Git found: $(git --version)"
+echo "✓ Git is installed: $(git --version)"
 echo ""
 
 # ============================================================================
@@ -64,171 +53,94 @@ echo ""
 # ============================================================================
 echo "[2/4] Checking for CMake..."
 if ! command -v cmake &> /dev/null; then
-    echo "CMake not found"
+    echo "WARNING: CMake is not installed"
+    echo ""
+    echo "Install CMake with:"
+    echo "  sudo apt-get update"
+    echo "  sudo apt-get install -y cmake"
     echo ""
     
-    if [ "$OS" = "linux" ]; then
-        echo "Install CMake with:"
-        echo "  sudo apt-get install cmake    (Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian)"
-        echo "  sudo yum install cmake        (RHEL/CentOS)"
-        echo "  sudo dnf install cmake        (Fedora)"
-        
-        read -p "Would you like to install CMake now? (y/n) " -n 1 -r
-        echo ""
-        
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            if command -v apt-get &> /dev/null; then
-                sudo apt-get update
-                sudo apt-get install -y cmake
-            elif command -v yum &> /dev/null; then
-                sudo yum install -y cmake
-            elif command -v dnf &> /dev/null; then
-                sudo dnf install -y cmake
-            else
-                echo "ERROR: Could not determine package manager"
-                exit 1
-            fi
-        else
-            echo "Please install CMake and run this script again"
-            exit 1
-        fi
-    elif [ "$OS" = "macos" ]; then
-        echo "Install CMake with:"
-        echo "  brew install cmake"
-        echo ""
-        
-        read -p "Would you like to install CMake now using Homebrew? (y/n) " -n 1 -r
-        echo ""
-        
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            if ! command -v brew &> /dev/null; then
-                echo "Homebrew not found. Installing Homebrew first..."
-                echo ""
-                echo "NOTE: This will download and execute the official Homebrew installer from:"
-                echo "  https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
-                echo ""
-                read -p "Continue? (y/n) " -n 1 -r
-                echo ""
-                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                    echo "Installation cancelled. Please install Homebrew manually:"
-                    echo "  Visit: https://brew.sh"
-                    exit 1
-                fi
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            fi
-            brew install cmake
-        else
-            echo "Please install CMake and run this script again"
-            exit 1
-        fi
-    fi
-fi
-
-echo "   CMake found: $(cmake --version | head -n1)"
-echo ""
-
-# ============================================================================
-# Step 3: Check for C++ Compiler and Development Tools
-# ============================================================================
-echo "[3/4] Checking for C++ compiler and build tools..."
-echo ""
-
-# Use the comprehensive compiler detection script
-if [ -f "tools/check-compiler.sh" ]; then
-    bash tools/check-compiler.sh
-    
-    if [ $? -ne 0 ]; then
-        echo ""
-        echo "The compiler detection script found issues."
-        echo ""
-        
-        read -p "Would you like to automatically fix these issues? (y/n) " -n 1 -r
-        echo ""
-        
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo ""
-            echo "Running compiler fix with autofix..."
-            bash tools/check-compiler.sh -autofix
-            
-            if [ $? -ne 0 ]; then
-                echo ""
-                echo "After fixing the issues, please run this setup script again."
-                exit 1
-            fi
-        else
-            read -p "Continue setup anyway? (y/n) " -n 1 -r
-            echo ""
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                exit 1
-            fi
-        fi
+    read -p "Would you like to install CMake now? (y/n) " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        sudo apt-get update
+        sudo apt-get install -y cmake
+        echo "✓ CMake installed successfully"
+    else
+        echo "ERROR: CMake is required to build the engine"
+        exit 1
     fi
 else
-    # Fallback to basic checks if detection script is missing
-    echo "   Compiler detection script not found, performing basic checks..."
-    
-    if [ "$OS" = "linux" ]; then
-        if ! command -v g++ &> /dev/null; then
-            echo "   ERROR: g++ not found"
-            echo ""
-            echo "   Install build tools with:"
-            echo "     sudo apt-get install build-essential    (Ubuntu 24.04 LTS / Ubuntu 22.04 / Debian)"
-            echo "     sudo yum groupinstall 'Development Tools'    (RHEL/CentOS)"
-            
-            read -p "Continue anyway? (y/n) " -n 1 -r
-            echo ""
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                exit 1
-            fi
-        else
-            echo "   g++ found: $(g++ --version | head -n1)"
-        fi
-    elif [ "$OS" = "macos" ]; then
-        if ! command -v clang++ &> /dev/null; then
-            echo "   ERROR: clang++ not found"
-            echo ""
-            echo "   Install Xcode Command Line Tools:"
-            echo "     xcode-select --install"
-            
-            read -p "Continue anyway? (y/n) " -n 1 -r
-            echo ""
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                exit 1
-            fi
-        else
-            echo "   clang++ found: $(clang++ --version | head -n1)"
-        fi
-    fi
+    CMAKE_VERSION=$(cmake --version | head -n1)
+    echo "✓ CMake is installed: $CMAKE_VERSION"
 fi
+echo ""
 
+# ============================================================================
+# Step 3: Check for C++ Compiler and Libraries
+# ============================================================================
+echo "[3/4] Checking for C++ compiler and libraries..."
+if [ -f "./tools/check-compiler.sh" ]; then
+    ./tools/check-compiler.sh -quiet
+    COMPILER_CHECK=$?
+    
+    if [ $COMPILER_CHECK -ne 0 ]; then
+        echo ""
+        echo "Compiler or required libraries are missing."
+        echo ""
+        read -p "Would you like to install them now? (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            ./tools/check-compiler.sh -autofix
+            echo ""
+            echo "✓ Development tools installed successfully"
+        else
+            echo "WARNING: Build may fail without required dependencies"
+            echo ""
+            read -p "Continue anyway? (y/n) " -n 1 -r
+            echo ""
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo "Setup aborted."
+                exit 1
+            fi
+        fi
+    else
+        echo "✓ C++ compiler and all required libraries are installed"
+    fi
+else
+    echo "WARNING: Compiler check script not found"
+    echo "Make sure you have GCC 13.3+ and development libraries installed:"
+    echo "  sudo apt-get install -y build-essential cmake git \\"
+    echo "      libgl1-mesa-dev libglu1-mesa-dev \\"
+    echo "      libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
+fi
 echo ""
 
 # ============================================================================
 # Step 4: Initialize Git Submodules
 # ============================================================================
 echo "[4/4] Initializing git submodules..."
-git submodule update --init --recursive
-
-if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to update git submodules"
-    exit 1
+if git submodule status | grep -q '^-'; then
+    echo "Downloading external dependencies (GLFW, GLM, Assimp)..."
+    git submodule update --init --recursive
+    echo "✓ Submodules initialized successfully"
+else
+    echo "✓ Submodules already initialized"
 fi
-
-echo "   Submodules initialized successfully"
 echo ""
 
 # ============================================================================
 # Setup Complete
 # ============================================================================
 echo "========================================"
-echo "Setup Complete!"
+echo "✓ Setup Complete!"
 echo "========================================"
 echo ""
-echo "Your development environment is ready."
-echo ""
 echo "Next steps:"
-echo "  1. Run: ./build.sh (to compile the engine)"
-echo "  2. Run: ./run.sh (to start the game engine)"
+echo "  1. Build the engine:  ./build.sh"
+echo "  2. Run the engine:    ./run.sh"
 echo ""
-echo "⚠️  If you encounter build issues, see TROUBLESHOOTING.md for solutions."
+echo "For more information, see:"
+echo "  - README.md - Quick start guide"
+echo "  - UBUNTU_24_04.md - Complete Ubuntu 24.04 development guide"
 echo ""
