@@ -175,7 +175,6 @@ cmake ..
 
 **Expected output**:
 ```
--- The C compiler identification is MSVC ...
 -- The CXX compiler identification is MSVC ...
 -- Configuring done
 -- Generating done
@@ -276,7 +275,7 @@ run.bat
 
 ##### Troubleshooting
 
-**Problem**: "No CMAKE_C_COMPILER could be found" or "No CMAKE_CXX_COMPILER could be found"
+**Problem**: "No CMAKE_CXX_COMPILER could be found" or "The CXX compiler identification is unknown"
 - **Cause**: Visual Studio is installed but the C++ compiler (MSVC) is not installed
 - **Solution**: 
   1. Open **Visual Studio Installer** (search in Start menu)
