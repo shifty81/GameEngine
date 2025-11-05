@@ -15,7 +15,6 @@ https://visualstudio.microsoft.com/downloads/
 
 **Optional but Recommended:**
 - C++ profiling tools
-- C++ CMake tools
 
 ### 2. Install .NET 9 SDK
 
@@ -49,7 +48,7 @@ Look for "DirectX 12" or "DirectX 11" in the System tab.
 
 1. **Clone the repository:**
    ```powershell
-   git clone --recursive https://github.com/shifty81/GameEngine.git
+   git clone https://github.com/shifty81/GameEngine.git
    cd GameEngine
    ```
 
@@ -74,7 +73,7 @@ Look for "DirectX 12" or "DirectX 11" in the System tab.
 
 1. **Clone the repository:**
    ```powershell
-   git clone --recursive https://github.com/shifty81/GameEngine.git
+   git clone https://github.com/shifty81/GameEngine.git
    cd GameEngine
    ```
 

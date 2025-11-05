@@ -1,6 +1,5 @@
 # Build directories
 build/
-build-mingw/
 bin/
 obj/
 lib/
@@ -12,16 +11,6 @@ _codeql_detected_source_root
 **/obj/
 *.binlog
 
-# MinGW installation (automatically downloaded)
-external/mingw64/
-
-# CMake files
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-*.cmake
-!CMakeLists.txt
-
 # IDE files
 .vs/
 .vscode/
@@ -31,12 +20,11 @@ cmake_install.cmake
 # Compiled files
 *.exe
 *.dll
-*.so
-*.dylib
-*.a
-*.lib
-*.o
+*.pdb
 *.obj
+*.lib
+*.ilk
+*.exp
 
 # Generated textures
 textures/
