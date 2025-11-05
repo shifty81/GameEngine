@@ -2,9 +2,15 @@
 build/
 build-mingw/
 bin/
+obj/
 lib/
 _codeql_build_dir/
 _codeql_detected_source_root
+
+# .NET build artifacts
+**/bin/
+**/obj/
+*.binlog
 
 # MinGW installation (automatically downloaded)
 external/mingw64/
@@ -19,10 +25,6 @@ cmake_install.cmake
 # IDE files
 .vs/
 .vscode/
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
 *.suo
 *.user
 
